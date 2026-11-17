@@ -18,6 +18,7 @@ export function gerarAlertas(conta: Conta, transacoes: Transacao[]): Alerta[] {
       nivel: "critico",
       titulo: "Conta bloqueada",
       descricao: "Sua conta foi bloqueada por suspeita de fraude. Transações estão indisponíveis.",
+      href: "/seguranca",
     })
   }
 
@@ -38,8 +39,8 @@ export function gerarAlertas(conta: Conta, transacoes: Transacao[]): Alerta[] {
       id: "transacoes-pendentes",
       nivel: "info",
       titulo: `${pendentes.length} transação${pendentes.length > 1 ? "ões" : ""} pendente${pendentes.length > 1 ? "s" : ""}`,
-      descricao: "Aguardando processamento. Transações pendentes podem ser canceladas.",
-      href: "/extrato",
+      descricao: "Aguardando processamento. Transações pendentes e agendamentos podem ser gerenciados ou cancelados.",
+      href: "/agendamentos",
     })
   }
 

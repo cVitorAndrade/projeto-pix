@@ -3,7 +3,7 @@ import { ReceberManager } from "./receber-manager"
 
 export const metadata: Metadata = {
   title: "Receber PIX | Projeto PIX",
-  description: "Mostre sua chave ou QR Code e registre o valor recebido na conta.",
+  description: "Gere um QR Code ou compartilhe sua chave PIX para receber transferências na sua conta.",
 }
 
 export default function ReceberPage() {

@@ -104,34 +104,39 @@ export default function DashboardPage() {
                 const contraparte = enviada ? t.contaDestino : t.contaOrigem
                 const status = statusEstilo[t.status]
                 return (
-                  <li key={t.id} className="flex items-center gap-4 py-3">
-                    <span
-                      className={`flex size-10 shrink-0 items-center justify-center rounded-full ${
-                        enviada ? "bg-rose-500/15 text-rose-300" : "bg-emerald-500/15 text-emerald-300"
-                      }`}
+                  <li key={t.id}>
+                    <Link
+                      href={`/transacoes/${t.id}`}
+                      className="-mx-2 flex items-center gap-4 rounded-xl px-2 py-3 transition-colors hover:bg-white/[0.04]"
                     >
-                      {enviada ? <ArrowUpRight className="size-5" /> : <ArrowDownLeft className="size-5" />}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">
-                        {enviada ? "PIX enviado" : "PIX recebido"}
-                      </p>
-                      <p className="truncate text-xs text-slate-400">
-                        {enviada ? "Para" : "De"} conta {contraparte} · {formatDataHora(t.dataHora)}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
                       <span
-                        className={`text-sm font-semibold ${
-                          enviada ? "text-rose-300" : "text-emerald-300"
+                        className={`flex size-10 shrink-0 items-center justify-center rounded-full ${
+                          enviada ? "bg-rose-500/15 text-rose-300" : "bg-emerald-500/15 text-emerald-300"
                         }`}
                       >
-                        {enviada ? "−" : "+"} {formatBRL(t.valor)}
+                        {enviada ? <ArrowUpRight className="size-5" /> : <ArrowDownLeft className="size-5" />}
                       </span>
-                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${status.className}`}>
-                        {status.label}
-                      </span>
-                    </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">
+                          {enviada ? "PIX enviado" : "PIX recebido"}
+                        </p>
+                        <p className="truncate text-xs text-slate-400">
+                          {enviada ? "Para" : "De"} conta {contraparte} · {formatDataHora(t.dataHora)}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <span
+                          className={`text-sm font-semibold ${
+                            enviada ? "text-rose-300" : "text-emerald-300"
+                          }`}
+                        >
+                          {enviada ? "−" : "+"} {formatBRL(t.valor)}
+                        </span>
+                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${status.className}`}>
+                          {status.label}
+                        </span>
+                      </div>
+                    </Link>
                   </li>
                 )
               })}

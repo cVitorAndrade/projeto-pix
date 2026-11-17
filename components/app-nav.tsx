@@ -2,13 +2,19 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { House, KeyRound, Landmark, LogOut, QrCode, Send, UserRound } from "lucide-react"
+import { BarChart3, Bell, CalendarClock, House, KeyRound, Landmark, LogOut, QrCode, ReceiptText, Send, Shield, UserRound, Users } from "lucide-react"
 import { cn } from "cn"
 
 const links = [
   { href: "/dashboard", label: "Início", icon: House },
   { href: "/transferir", label: "Transferir", icon: Send },
+  { href: "/agendamentos", label: "Agendados", icon: CalendarClock },
   { href: "/receber", label: "Receber", icon: QrCode },
+  { href: "/extrato", label: "Extrato", icon: ReceiptText },
+  { href: "/relatorios", label: "Relatórios", icon: BarChart3 },
+  { href: "/contatos", label: "Contatos", icon: Users },
+  { href: "/notificacoes", label: "Notificações", icon: Bell },
+  { href: "/seguranca", label: "Segurança", icon: Shield },
   { href: "/chaves", label: "Chaves PIX", icon: KeyRound },
   { href: "/contas", label: "Contas", icon: Landmark },
   { href: "/perfil", label: "Perfil", icon: UserRound },

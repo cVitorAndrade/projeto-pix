@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { QRCodeSVG } from "qrcode.react"
-import { Check, CheckCircle2, Copy, KeyRound, Loader2, Lock, QrCode, TriangleAlert, Wallet } from "lucide-react"
+import { Check, Copy, KeyRound, Lock, QrCode, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,8 +15,6 @@ import { formatChave, tipoInfo, type TipoChave } from "@/lib/chaves"
 import { parseValor } from "@/lib/money"
 import type { Conta } from "@/lib/types"
 
-const delay = (ms = 800) => new Promise((r) => setTimeout(r, ms))
-
 const select =
   "h-10 w-full rounded-lg border border-white/15 bg-slate-900 px-3 text-sm text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 const input = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
@@ -24,7 +22,7 @@ const card = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-bl
 
 export function ReceberManager() {
   // TODO: carregar via GET /contas?usuarioId={id}
-  const [contas, setContas] = useState<Conta[]>(contasUsuarioMock)
+  const [contas] = useState<Conta[]>(contasUsuarioMock)
   const [numero, setNumero] = useState(contas[0].numeroConta)
   const conta = contas.find((c) => c.numeroConta === numero) ?? contas[0]
 
@@ -33,28 +31,56 @@ export function ReceberManager() {
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">Receber PIX</h1>
         <p className="mt-1 text-sm text-slate-300">
-          Mostre sua chave ou QR Code para quem vai pagar e registre o valor recebido.
+          Mostre seu QR Code ou compartilhe sua chave para quem vai pagar. O saldo é atualizado automaticamente quando a transferência chega.
         </p>
       </div>
 
-      <div className="max-w-sm">
-        <Label htmlFor="conta-select" className="mb-2 text-slate-200">
-          Conta que vai receber
-        </Label>
-        <select
-          id="conta-select"
-          value={conta.numeroConta}
-          onChange={(e) => setNumero(e.target.value)}
-          className={select}
-        >
-          {contas.map((c) => (
-            <option key={c.numeroConta} value={c.numeroConta}>
-              {c.numeroConta}
-              {c.bloqueada ? " (bloqueada)" : ""}
-            </option>
-          ))}
-        </select>
-      </div>
+      <section
+        aria-label="Conta que vai receber"
+        className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl sm:px-6"
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-300 to-emerald-500 text-slate-950">
+            <Wallet className="size-5" />
+          </span>
+          <div>
+            <Label htmlFor="conta-select" className="text-xs text-slate-400">
+              Conta que vai receber
+            </Label>
+            <div className="mt-0.5 flex items-center gap-2">
+              <select
+                id="conta-select"
+                value={conta.numeroConta}
+                onChange={(e) => setNumero(e.target.value)}
+                className="h-9 rounded-lg border border-white/15 bg-slate-900 px-3 text-sm font-medium text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                {contas.map((c) => (
+                  <option key={c.numeroConta} value={c.numeroConta}>
+                    Conta {c.numeroConta}
+                    {c.bloqueada ? " (bloqueada)" : ""}
+                  </option>
+                ))}
+              </select>
+              {conta.bloqueada ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2.5 py-0.5 text-xs font-medium text-red-300">
+                  <Lock className="size-3" /> Bloqueada
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-medium text-emerald-300">
+                  Ativa
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="text-right">
+          <p className="text-xs text-slate-400">Saldo atual</p>
+          <p id="saldo-atual" className="text-lg font-semibold text-teal-300" aria-live="polite">
+            {formatBRL(conta.saldo)}
+          </p>
+        </div>
+      </section>
 
       {conta.bloqueada && (
         <p
@@ -66,24 +92,7 @@ export function ReceberManager() {
         </p>
       )}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <QrCard key={conta.numeroConta} conta={conta} />
-        <RegistrarCard
-          key={`reg-${conta.numeroConta}`}
-          conta={conta}
-          onRegistrar={async (valor) => {
-            // TODO: POST /contas/{numero}/depositos com { valor }. 422 CONTA_BLOQUEADA, 400 VALOR_INVALIDO
-            await delay()
-            setContas((l) =>
-              l.map((c) =>
-                c.numeroConta === conta.numeroConta
-                  ? { ...c, saldo: Math.round((c.saldo + valor) * 100) / 100 }
-                  : c
-              )
-            )
-          }}
-        />
-      </div>
+      <QrCard key={conta.numeroConta} conta={conta} />
     </>
   )
 }
@@ -100,7 +109,7 @@ function QrCard({ conta }: { conta: Conta }) {
 
   if (!chave) {
     return (
-      <section className={`${card} flex flex-col items-center justify-center gap-3 text-center`}>
+      <section className={`${card} flex flex-col items-center justify-center gap-3 py-14 text-center`}>
         <KeyRound className="size-10 text-slate-400" />
         <h2 className="text-lg font-semibold">Nenhuma chave disponível</h2>
         <p className="max-w-xs text-sm text-slate-300">
@@ -124,9 +133,9 @@ function QrCard({ conta }: { conta: Conta }) {
   const chaveFmt = formatChave(chave.tipo, chave.valor)
 
   return (
-    <section aria-labelledby="qr-titulo" className={`${card} flex flex-col gap-5`}>
+    <section aria-labelledby="qr-titulo" className={`${card} mx-auto flex w-full max-w-2xl flex-col gap-6`}>
       <h2 id="qr-titulo" className="flex items-center gap-2 text-lg font-semibold">
-        <QrCode className="size-5 text-teal-300" /> Seu QR Code
+        <QrCode className="size-5 text-teal-300" /> Seu QR Code e Copia e Cola
       </h2>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -149,7 +158,7 @@ function QrCard({ conta }: { conta: Conta }) {
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="valor-solicitado" className="text-slate-200">
-            Valor (opcional)
+            Valor a cobrar (opcional)
           </Label>
           <Input
             id="valor-solicitado"
@@ -164,16 +173,16 @@ function QrCard({ conta }: { conta: Conta }) {
         </div>
       </div>
       {valorInvalido && (
-        <p id="valor-solicitado-erro" className="-mt-3 text-xs text-red-400">
+        <p id="valor-solicitado-erro" className="-mt-4 text-xs text-red-400">
           Informe um valor maior que zero (ex.: 25,90).
         </p>
       )}
 
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-3 py-2">
         <div className="rounded-2xl bg-white p-4 shadow-lg shadow-teal-500/10">
           <QRCodeSVG
             value={brcode}
-            size={208}
+            size={220}
             level="M"
             fgColor="#0f172a"
             bgColor="#ffffff"
@@ -181,9 +190,9 @@ function QrCard({ conta }: { conta: Conta }) {
           />
         </div>
         {valor ? (
-          <p className="text-lg font-semibold text-teal-300">{formatBRL(valor)}</p>
+          <p className="text-xl font-semibold text-teal-300">{formatBRL(valor)}</p>
         ) : (
-          <p className="text-xs text-slate-400">Sem valor definido: o pagador informa o valor.</p>
+          <p className="text-xs text-slate-400">Sem valor definido: quem for pagar informa o valor.</p>
         )}
         <p className="max-w-full truncate text-center font-mono text-xs text-slate-300" title={chaveFmt}>
           {chaveFmt}
@@ -206,102 +215,9 @@ function QrCard({ conta }: { conta: Conta }) {
           onClick={() => copiar("brcode", brcode)}
         >
           {copiado === "brcode" ? <Check /> : <Copy />}
-          {copiado === "brcode" ? "Código copiado" : "Copia e cola"}
+          {copiado === "brcode" ? "Código copiado" : "PIX Copia e Cola"}
         </Button>
       </div>
-    </section>
-  )
-}
-
-function RegistrarCard({
-  conta,
-  onRegistrar,
-}: {
-  conta: Conta
-  onRegistrar: (valor: number) => Promise<void>
-}) {
-  const [valorTxt, setValorTxt] = useState("")
-  const [erro, setErro] = useState<string | null>(null)
-  const [enviando, setEnviando] = useState(false)
-  const [sucesso, setSucesso] = useState<string | null>(null)
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
-    setSucesso(null)
-    const valor = parseValor(valorTxt)
-    if (!valorTxt.trim()) return setErro("Informe o valor recebido.")
-    if (valor === null || valor <= 0) return setErro("O valor deve ser maior que zero (ex.: 25,90).")
-    if (conta.bloqueada) return setErro("Não é possível depositar em uma conta bloqueada.")
-
-    setErro(null)
-    setEnviando(true)
-    await onRegistrar(valor)
-    setEnviando(false)
-    setValorTxt("")
-    setSucesso(`${formatBRL(valor)} registrados na conta ${conta.numeroConta}.`)
-  }
-
-  return (
-    <section aria-labelledby="reg-titulo" className={`${card} flex flex-col gap-5`}>
-      <h2 id="reg-titulo" className="flex items-center gap-2 text-lg font-semibold">
-        <Wallet className="size-5 text-teal-300" /> Registrar valor recebido
-      </h2>
-      <p className="-mt-2 text-sm text-slate-300">
-        Quando o pagamento chegar, registre o valor para atualizar o saldo da conta.
-      </p>
-
-      <div className="rounded-xl bg-white/5 px-4 py-3">
-        <p className="text-xs text-slate-400">Saldo atual · conta {conta.numeroConta}</p>
-        <p id="saldo-atual" className="mt-1 text-2xl font-semibold tracking-tight" aria-live="polite">
-          {formatBRL(conta.saldo)}
-        </p>
-      </div>
-
-      <form onSubmit={submit} noValidate className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="valor-recebido" className="text-slate-200">
-            Valor recebido (R$)
-          </Label>
-          <Input
-            id="valor-recebido"
-            inputMode="decimal"
-            placeholder="0,00"
-            value={valorTxt}
-            onChange={(e) => {
-              setValorTxt(e.target.value)
-              setErro(null)
-              setSucesso(null)
-            }}
-            disabled={conta.bloqueada}
-            aria-invalid={!!erro}
-            aria-describedby={erro ? "valor-recebido-erro" : undefined}
-            className={input}
-          />
-          {erro && (
-            <p id="valor-recebido-erro" role="alert" className="flex items-center gap-1.5 text-xs text-red-400">
-              <TriangleAlert className="size-3.5" /> {erro}
-            </p>
-          )}
-        </div>
-
-        <Button
-          id="registrar-recebimento"
-          type="submit"
-          disabled={enviando || conta.bloqueada}
-          className="h-11 bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 transition-all hover:from-teal-300 hover:to-emerald-400 hover:shadow-lg hover:shadow-teal-500/30"
-        >
-          {enviando ? <Loader2 className="size-4 animate-spin" /> : "Registrar recebimento"}
-        </Button>
-      </form>
-
-      {sucesso && (
-        <p
-          role="status"
-          className="flex items-start gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
-        >
-          <CheckCircle2 className="mt-0.5 size-4 shrink-0" /> {sucesso}
-        </p>
-      )}
     </section>
   )
 }

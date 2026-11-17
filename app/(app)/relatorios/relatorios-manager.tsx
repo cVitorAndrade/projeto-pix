@@ -31,8 +31,8 @@ import { maskCnpj } from "@/lib/chaves"
 import { maskCpf } from "@/lib/validation"
 import type { StatusTransacao, Transacao } from "@/lib/types"
 
-const cardClass = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl sm:p-8"
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
+const cardClass = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8"
+const inputClass = ""
 
 type TipoRelatorio = "usuario" | "periodo"
 
@@ -44,18 +44,18 @@ type UsuarioRelatorio = {
 }
 
 const statusEstilo: Record<StatusTransacao, { label: string; className: string }> = {
-  PENDENTE: { label: "Pendente", className: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
+  PENDENTE: { label: "Pendente", className: "bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30" },
   CONCLUIDA: {
     label: "Concluída",
-    className: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    className: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
   },
   CANCELADA: {
     label: "Cancelada",
-    className: "bg-slate-500/30 text-slate-300 border-slate-500/40",
+    className: "bg-slate-500/30 text-muted-foreground border-slate-500/40",
   },
   ESTORNADA: {
     label: "Estornada",
-    className: "bg-indigo-500/25 text-indigo-300 border-indigo-500/30",
+    className: "bg-indigo-500/25 text-indigo-700 dark:text-indigo-400 border-indigo-500/30",
   },
 }
 
@@ -265,7 +265,7 @@ export function RelatoriosManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Relatórios PIX</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Gere relatórios consolidados de transações por usuário ou por período e exporte em CSV ou PDF.
           </p>
         </div>
@@ -277,16 +277,16 @@ export function RelatoriosManager() {
             variant="outline"
             disabled={resultadoRelatorio.length === 0 || !!erroPeriodo}
             onClick={exportarCSV}
-            className="h-10 bg-transparent text-slate-100"
+            className="h-10  text-foreground"
           >
-            <FileSpreadsheet className="size-4 text-emerald-400" /> Exportar CSV
+            <FileSpreadsheet className="size-4 text-emerald-600 dark:text-emerald-400" /> Exportar CSV
           </Button>
           <Button
             id="exportar-pdf-btn"
             type="button"
             disabled={resultadoRelatorio.length === 0 || !!erroPeriodo}
             onClick={exportarPDF}
-            className="h-10 bg-gradient-to-r from-teal-400 to-emerald-500 px-4 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+            className="h-10 bg-primary px-4 text-primary-foreground hover:bg-primary/90"
           >
             <Printer className="size-4" /> Exportar PDF
           </Button>
@@ -296,7 +296,7 @@ export function RelatoriosManager() {
       {avisoExportacao && (
         <p
           role="status"
-          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
         >
           <CheckCircle2 className="size-4 shrink-0" /> {avisoExportacao}
         </p>
@@ -304,16 +304,16 @@ export function RelatoriosManager() {
 
       {/* Seletor de Modalidade de Relatório (Funcionalidade 18 vs Funcionalidade 19) */}
       <section aria-label="Configuração do relatório" className={`${cardClass} flex flex-col gap-5`}>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
           <div className="flex items-center gap-2">
-            <Filter className="size-5 text-teal-300" />
+            <Filter className="size-5 text-primary" />
             <h2 className="text-lg font-semibold">Tipo de relatório</h2>
           </div>
 
           <div
             role="tablist"
             aria-label="Modalidade do relatório"
-            className="inline-flex rounded-xl border border-white/15 bg-slate-900/90 p-1"
+            className="inline-flex rounded-xl border border-border bg-muted p-1"
           >
             <button
               type="button"
@@ -326,8 +326,8 @@ export function RelatoriosManager() {
               }}
               className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors ${
                 modo === "usuario"
-                  ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
-                  : "text-slate-300 hover:text-white"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <UserRound className="size-3.5" /> Por Usuário (18)
@@ -343,8 +343,8 @@ export function RelatoriosManager() {
               }}
               className={`flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors ${
                 modo === "periodo"
-                  ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
-                  : "text-slate-300 hover:text-white"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <CalendarRange className="size-3.5" /> Por Período (19)
@@ -355,7 +355,7 @@ export function RelatoriosManager() {
         {modo === "usuario" ? (
           <div className="grid gap-4 sm:grid-cols-[1.5fr_1fr]">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="relatorio-usuario-select" className="text-slate-200">
+              <Label htmlFor="relatorio-usuario-select" className="text-foreground">
                 Selecione o usuário (pagador ou recebedor)
               </Label>
               <select
@@ -365,7 +365,7 @@ export function RelatoriosManager() {
                   setUsuarioId(Number(e.target.value))
                   setAvisoExportacao(null)
                 }}
-                className="h-10 w-full rounded-lg border border-white/15 bg-slate-900 px-3 text-sm text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+                className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 {usuariosDisponiveis.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -373,18 +373,18 @@ export function RelatoriosManager() {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-slate-400">
-                Espelha <code className="font-mono text-teal-300">GET /transacoes?usuarioId={usuarioId}</code>{" "}
+              <p className="text-xs text-muted-foreground">
+                Espelha <code className="font-mono text-primary">GET /transacoes?usuarioId={usuarioId}</code>{" "}
                 (reúne todas as transações em que o usuário participou como origem ou destino).
               </p>
             </div>
 
-            <div className="flex flex-col justify-center rounded-xl border border-white/10 bg-white/[0.04] p-4 text-xs">
-              <span className="text-slate-400">Titular selecionado</span>
-              <span className="mt-0.5 text-sm font-semibold text-white">
+            <div className="flex flex-col justify-center rounded-xl border border-border bg-muted/40 p-4 text-xs">
+              <span className="text-muted-foreground">Titular selecionado</span>
+              <span className="mt-0.5 text-sm font-semibold text-foreground">
                 {usuarioSelecionado.nome}
               </span>
-              <span className="mt-0.5 text-slate-300">
+              <span className="mt-0.5 text-muted-foreground">
                 {usuarioSelecionado.documento.length === 14
                   ? `CNPJ ${maskCnpj(usuarioSelecionado.documento)}`
                   : `CPF ${maskCpf(usuarioSelecionado.documento)}`}{" "}
@@ -397,7 +397,7 @@ export function RelatoriosManager() {
           <div className="flex flex-col gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="relatorio-data-inicio" className="text-slate-200">
+                <Label htmlFor="relatorio-data-inicio" className="text-foreground">
                   Data de início
                 </Label>
                 <Input
@@ -414,7 +414,7 @@ export function RelatoriosManager() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="relatorio-data-fim" className="text-slate-200">
+                <Label htmlFor="relatorio-data-fim" className="text-foreground">
                   Data final
                 </Label>
                 <Input
@@ -433,7 +433,7 @@ export function RelatoriosManager() {
 
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs text-slate-400">Períodos rápidos:</span>
+                <span className="text-xs text-muted-foreground">Períodos rápidos:</span>
                 {ATALHOS_PERIODO.map((at) => {
                   const ativo = dataInicio === at.inicio && dataFim === at.fim
                   return (
@@ -447,8 +447,8 @@ export function RelatoriosManager() {
                       }}
                       className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                         ativo
-                          ? "border-teal-400/60 bg-teal-400/20 text-teal-200"
-                          : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border bg-muted/50 text-muted-foreground hover:bg-muted"
                       }`}
                     >
                       {at.label}
@@ -457,9 +457,9 @@ export function RelatoriosManager() {
                 })}
               </div>
 
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 Espelha{" "}
-                <code className="font-mono text-teal-300">
+                <code className="font-mono text-primary">
                   GET /transacoes?inicio={dataInicio || "..."}&fim={dataFim || "..."}
                 </code>
               </p>
@@ -469,7 +469,7 @@ export function RelatoriosManager() {
               <p
                 id="relatorio-periodo-erro"
                 role="alert"
-                className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-300"
+                className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-xs text-destructive"
               >
                 <TriangleAlert className="size-4 shrink-0" /> {erroPeriodo}
               </p>
@@ -480,46 +480,46 @@ export function RelatoriosManager() {
 
       {/* Indicadores Consolidados do Relatório */}
       <section aria-label="Métricas consolidadas do relatório" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="text-xs text-slate-400">Total de transações</p>
-          <p id="relatorio-qtd-total" className="mt-1 text-2xl font-semibold tracking-tight text-white">
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="text-xs text-muted-foreground">Total de transações</p>
+          <p id="relatorio-qtd-total" className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
             {metricas.totalRegistros} {metricas.totalRegistros === 1 ? "registro" : "registros"}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             {metricas.qtdConcluidas} concluídas · {metricas.qtdPendentes} pendentes
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="text-xs text-slate-400">Volume concluído</p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-teal-300">
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="text-xs text-muted-foreground">Volume concluído</p>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-primary">
             {formatBRL(metricas.volumeConcluido)}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             Bruto no filtro: {formatBRL(metricas.volumeTotal)}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <ArrowDownLeft className="size-3.5 text-emerald-400" /> Entradas (recebidas)
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ArrowDownLeft className="size-3.5 text-emerald-600 dark:text-emerald-400" /> Entradas (recebidas)
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-300">
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
             + {formatBRL(metricas.entradasUsuario)}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             Créditos concluídos para {usuarioSelecionado.nome.split(" ")[0]}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <ArrowUpRight className="size-3.5 text-rose-400" /> Saídas (enviadas)
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ArrowUpRight className="size-3.5 text-rose-600 dark:text-rose-400" /> Saídas (enviadas)
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-rose-300">
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-rose-600 dark:text-rose-600 dark:text-rose-400">
             − {formatBRL(metricas.saidasUsuario)}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             Débitos concluídos de {usuarioSelecionado.nome.split(" ")[0]}
           </p>
         </div>
@@ -530,14 +530,14 @@ export function RelatoriosManager() {
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 id="tabela-relatorio-titulo" className="flex items-center gap-2 text-lg font-semibold">
-              <BarChart3 className="size-5 text-teal-300" />
+              <BarChart3 className="size-5 text-primary" />
               {modo === "usuario"
                 ? `Relatório de Transações — ${usuarioSelecionado.nome}`
                 : erroPeriodo
                   ? "Período inválido"
                   : `Relatório por Período — ${formatData(dataInicio)} até ${formatData(dataFim)}`}
             </h2>
-            <p className="mt-0.5 text-xs text-slate-400">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               Documento pronto para auditoria e exportação em CSV ou PDF.
             </p>
           </div>
@@ -546,7 +546,7 @@ export function RelatoriosManager() {
             <button
               type="button"
               onClick={exportarCSV}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-teal-300 hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
             >
               <Download className="size-3.5" /> Baixar planilha (.csv)
             </button>
@@ -554,10 +554,10 @@ export function RelatoriosManager() {
         </div>
 
         {resultadoRelatorio.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 py-16 text-center">
-            <FileText className="size-10 text-slate-400" />
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-muted/30 py-16 text-center">
+            <FileText className="size-10 text-muted-foreground" />
             <h3 className="text-base font-semibold">Nenhum registro para este relatório</h3>
-            <p className="max-w-sm text-sm text-slate-300">
+            <p className="max-w-sm text-sm text-muted-foreground">
               {erroPeriodo
                 ? erroPeriodo
                 : "Não foram encontradas transações para o critério selecionado."}
@@ -567,7 +567,7 @@ export function RelatoriosManager() {
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left text-sm">
               <thead>
-                <tr className="border-b border-white/15 text-xs uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-input text-xs uppercase tracking-wider text-muted-foreground">
                   <th className="py-3 pr-4 font-semibold">ID</th>
                   <th className="px-4 py-3 font-semibold">Data / Hora</th>
                   <th className="px-4 py-3 font-semibold">Origem (Pagador)</th>
@@ -577,7 +577,7 @@ export function RelatoriosManager() {
                   <th className="py-3 pl-4 text-right font-semibold">Comprovante</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-border">
                 {resultadoRelatorio.map((t) => {
                   const status = statusEstilo[t.status]
                   const nomeOrigem =
@@ -588,25 +588,25 @@ export function RelatoriosManager() {
                     `Conta ${t.contaDestino}`
 
                   return (
-                    <tr key={t.id} className="transition-colors hover:bg-white/[0.03]">
-                      <td className="py-3.5 pr-4 font-mono text-xs text-slate-300">
+                    <tr key={t.id} className="transition-colors hover:bg-muted/40">
+                      <td className="py-3.5 pr-4 font-mono text-xs text-muted-foreground">
                         #{t.id}
                       </td>
-                      <td className="px-4 py-3.5 whitespace-nowrap text-xs text-slate-200">
+                      <td className="px-4 py-3.5 whitespace-nowrap text-xs text-foreground">
                         <div>{formatDataHora(t.dataHora)}</div>
                         {t.agendadaPara && (
-                          <div className="text-[11px] text-amber-300">
+                          <div className="text-[11px] text-amber-700 dark:text-amber-400">
                             Agendado: {formatData(t.agendadaPara)}
                           </div>
                         )}
                       </td>
                       <td className="px-4 py-3.5">
-                        <div className="font-medium text-white">{nomeOrigem}</div>
-                        <div className="text-xs text-slate-400">Conta {t.contaOrigem}</div>
+                        <div className="font-medium text-foreground">{nomeOrigem}</div>
+                        <div className="text-xs text-muted-foreground">Conta {t.contaOrigem}</div>
                       </td>
                       <td className="px-4 py-3.5">
-                        <div className="font-medium text-white">{nomeDestino}</div>
-                        <div className="text-xs text-slate-400">Conta {t.contaDestino}</div>
+                        <div className="font-medium text-foreground">{nomeDestino}</div>
+                        <div className="text-xs text-muted-foreground">Conta {t.contaDestino}</div>
                       </td>
                       <td className="px-4 py-3.5">
                         <span
@@ -615,7 +615,7 @@ export function RelatoriosManager() {
                           {status.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5 text-right font-semibold whitespace-nowrap text-teal-300">
+                      <td className="px-4 py-3.5 text-right font-semibold whitespace-nowrap text-primary">
                         {formatBRL(t.valor)}
                       </td>
                       <td className="py-3.5 pl-4 text-right">
@@ -624,7 +624,7 @@ export function RelatoriosManager() {
                           nativeButton={false}
                           variant="ghost"
                           size="sm"
-                          className="text-xs text-slate-300 hover:text-white"
+                          className="text-xs text-muted-foreground hover:text-foreground"
                         >
                           <ExternalLink className="size-3.5" /> Abrir
                         </Button>

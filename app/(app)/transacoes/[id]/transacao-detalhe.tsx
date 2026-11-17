@@ -53,8 +53,8 @@ import type { Conta, StatusTransacao, Transacao } from "@/lib/types"
 
 const delay = (ms = 750) => new Promise((r) => setTimeout(r, ms))
 
-const cardClass = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl sm:p-8"
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
+const cardClass = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8"
+const inputClass = ""
 
 const CIDADES_SUGERIDAS = [
   "Quixadá, CE (-4.9716, -39.0153)",
@@ -85,7 +85,7 @@ const statusConfig: Record<
     titulo: "Transação PIX pendente",
     descricao:
       "Esta transação aguarda processamento ou a data agendada. Enquanto estiver pendente, você pode cancelá-la.",
-    badgeClass: "border-amber-500/30 bg-amber-500/20 text-amber-300",
+    badgeClass: "border-amber-500/30 bg-amber-500/20 text-amber-700 dark:text-amber-400",
     iconClass: "from-amber-300 to-orange-400 text-slate-950 shadow-amber-500/20",
   },
   CONCLUIDA: {
@@ -93,7 +93,7 @@ const statusConfig: Record<
     titulo: "Transação PIX concluída",
     descricao:
       "O valor foi transferido entre as contas. Caso identifique uma operação indevida, é possível solicitar o estorno.",
-    badgeClass: "border-emerald-500/30 bg-emerald-500/20 text-emerald-300",
+    badgeClass: "border-emerald-500/30 bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400",
     iconClass: "from-teal-300 to-emerald-500 text-slate-950 shadow-teal-500/20",
   },
   CANCELADA: {
@@ -101,7 +101,7 @@ const statusConfig: Record<
     titulo: "Transação PIX cancelada",
     descricao:
       "Esta transação pendente foi cancelada antes da efetivação e nenhum valor foi movimentado.",
-    badgeClass: "border-slate-500/40 bg-slate-500/30 text-slate-300",
+    badgeClass: "border-slate-500/40 bg-slate-500/30 text-muted-foreground",
     iconClass: "from-slate-300 to-slate-500 text-slate-950 shadow-slate-500/20",
   },
   ESTORNADA: {
@@ -109,7 +109,7 @@ const statusConfig: Record<
     titulo: "Transação PIX estornada",
     descricao:
       "O valor desta operação foi devolvido integralmente para a conta de origem.",
-    badgeClass: "border-indigo-500/30 bg-indigo-500/25 text-indigo-300",
+    badgeClass: "border-indigo-500/30 bg-indigo-500/25 text-indigo-700 dark:text-indigo-400",
     iconClass: "from-indigo-300 to-violet-500 text-slate-950 shadow-indigo-500/20",
   },
 }
@@ -327,7 +327,7 @@ export function TransacaoDetalhe() {
           nativeButton={false}
           variant="outline"
           size="sm"
-          className="bg-transparent text-slate-200"
+          className=" text-foreground"
         >
           <ArrowLeft className="size-4" /> Voltar ao extrato
         </Button>
@@ -337,7 +337,7 @@ export function TransacaoDetalhe() {
       </div>
 
       <div className="flex items-center gap-2">
-        <Label htmlFor="trocar-transacao-select" className="text-xs text-slate-400">
+        <Label htmlFor="trocar-transacao-select" className="text-xs text-muted-foreground">
           Transação:
         </Label>
         <select
@@ -348,7 +348,7 @@ export function TransacaoDetalhe() {
             setEditandoLocal(false)
             router.push(`/transacoes/${e.target.value}`)
           }}
-          className="h-9 rounded-lg border border-white/15 bg-slate-900 px-3 text-xs font-medium text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="h-9 rounded-lg border border-input bg-background px-3 text-xs font-medium text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           {!transacao && <option value="">#{idParam} (Não encontrada)</option>}
           {lista.map((item) => (
@@ -366,9 +366,9 @@ export function TransacaoDetalhe() {
       <>
         {barraNavegacao}
         <section className={`${cardClass} flex flex-col items-center justify-center gap-4 py-16 text-center`}>
-          <FileWarning className="size-12 text-amber-300" />
+          <FileWarning className="size-12 text-amber-700 dark:text-amber-400" />
           <h2 className="text-xl font-semibold">Transação #{String(params?.id)} não encontrada</h2>
-          <p className="max-w-md text-sm text-slate-300">
+          <p className="max-w-md text-sm text-muted-foreground">
             Não localizamos nenhuma transação com este identificador no histórico (404 TRANSACAO_NAO_ENCONTRADA).
           </p>
           <div className="flex flex-wrap gap-3">
@@ -377,7 +377,7 @@ export function TransacaoDetalhe() {
             </Button>
             <Button
               onClick={() => router.push(`/transacoes/${lista[0].id}`)}
-              className="bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
+              className="bg-primary text-primary-foreground"
             >
               Abrir transação #{lista[0].id}
             </Button>
@@ -438,8 +438,8 @@ export function TransacaoDetalhe() {
           role={feedback.tipo === "erro" ? "alert" : "status"}
           className={`flex items-start gap-2.5 rounded-xl border px-4 py-3 text-sm ${
             feedback.tipo === "sucesso"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-              : "border-red-500/30 bg-red-500/10 text-red-300"
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
+              : "border-destructive/30 bg-destructive/10 text-destructive"
           }`}
         >
           {feedback.tipo === "sucesso" ? (
@@ -454,7 +454,7 @@ export function TransacaoDetalhe() {
       <div className="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
         {/* Coluna Esquerda: Comprovante Oficial da Transação */}
         <section aria-labelledby="comprovante-heading" className={`${cardClass} flex flex-col gap-6`}>
-          <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/10 pb-6">
+          <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-6">
             <div className="flex items-center gap-4">
               <span
                 className={`flex size-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br shadow-lg ${cfg.iconClass}`}
@@ -476,7 +476,7 @@ export function TransacaoDetalhe() {
 
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-xs text-slate-400">
+                  <span className="font-mono text-xs text-muted-foreground">
                     Transação #{transacao.id}
                   </span>
                   <span
@@ -488,15 +488,15 @@ export function TransacaoDetalhe() {
                 <h2 id="comprovante-heading" className="mt-1 text-xl font-semibold">
                   {cfg.titulo}
                 </h2>
-                <p className="mt-0.5 text-xs text-slate-300">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Registrada em {formatDataHora(transacao.dataHora)}
                 </p>
               </div>
             </div>
 
             <div className="text-left sm:text-right">
-              <p className="text-xs text-slate-400">Valor da operação</p>
-              <p id="detalhe-valor" className="mt-0.5 text-3xl font-bold tracking-tight text-teal-300">
+              <p className="text-xs text-muted-foreground">Valor da operação</p>
+              <p id="detalhe-valor" className="mt-0.5 text-3xl font-bold tracking-tight text-primary">
                 {formatBRL(transacao.valor)}
               </p>
             </div>
@@ -504,53 +504,53 @@ export function TransacaoDetalhe() {
 
           {/* Origem e Destino */}
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="rounded-xl border border-border bg-muted/40 p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Origem (Pagador)
                 </span>
                 {infoOrigem.minha && (
-                  <span className="rounded bg-teal-400/15 px-2 py-0.5 text-[10px] font-medium text-teal-300">
+                  <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-medium text-primary">
                     Sua conta
                   </span>
                 )}
               </div>
-              <p className="mt-2 font-semibold text-white">{infoOrigem.nome}</p>
-              <p className="text-xs text-slate-400">
+              <p className="mt-2 font-semibold text-foreground">{infoOrigem.nome}</p>
+              <p className="text-xs text-muted-foreground">
                 {infoOrigem.documento.length === 14
                   ? `CNPJ ${maskCnpj(infoOrigem.documento)}`
                   : `CPF ${maskCpf(infoOrigem.documento)}`}
               </p>
-              <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2.5 text-xs">
-                <span className="text-slate-400">Conta {transacao.contaOrigem}</span>
+              <div className="mt-3 flex items-center justify-between border-t border-border pt-2.5 text-xs">
+                <span className="text-muted-foreground">Conta {transacao.contaOrigem}</span>
                 {infoOrigem.minha && (
-                  <span className="font-medium text-slate-200">
+                  <span className="font-medium text-foreground">
                     Saldo: {formatBRL(infoOrigem.saldo)}
                   </span>
                 )}
               </div>
             </div>
 
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+            <div className="rounded-xl border border-border bg-muted/40 p-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Destino (Recebedor)
                 </span>
                 {infoDestino.minha && (
-                  <span className="rounded bg-teal-400/15 px-2 py-0.5 text-[10px] font-medium text-teal-300">
+                  <span className="rounded bg-muted px-2 py-0.5 text-[10px] font-medium text-primary">
                     Sua conta
                   </span>
                 )}
               </div>
-              <p className="mt-2 font-semibold text-white">{infoDestino.nome}</p>
-              <p className="text-xs text-slate-400">
+              <p className="mt-2 font-semibold text-foreground">{infoDestino.nome}</p>
+              <p className="text-xs text-muted-foreground">
                 {infoDestino.documento.length === 14
                   ? `CNPJ ${maskCnpj(infoDestino.documento)}`
                   : `CPF ${maskCpf(infoDestino.documento)}`}
               </p>
-              <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-2.5 text-xs">
-                <span className="text-slate-400">Conta {transacao.contaDestino}</span>
-                <span className="font-medium text-slate-200">
+              <div className="mt-3 flex items-center justify-between border-t border-border pt-2.5 text-xs">
+                <span className="text-muted-foreground">Conta {transacao.contaDestino}</span>
+                <span className="font-medium text-foreground">
                   Saldo: {formatBRL(infoDestino.saldo)}
                 </span>
               </div>
@@ -558,21 +558,21 @@ export function TransacaoDetalhe() {
           </div>
 
           {/* Detalhes técnicos do comprovante */}
-          <dl className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm sm:grid-cols-2">
+          <dl className="grid gap-3 rounded-xl border border-border bg-muted/40 p-4 text-sm sm:grid-cols-2">
             {transacao.chaveDestino && transacao.tipoChave && (
               <div>
-                <dt className="text-xs text-slate-400">
+                <dt className="text-xs text-muted-foreground">
                   Chave PIX ({tipoInfo[transacao.tipoChave as TipoChave]?.label ?? transacao.tipoChave})
                 </dt>
-                <dd className="mt-0.5 break-all font-mono text-xs text-slate-200">
+                <dd className="mt-0.5 break-all font-mono text-xs text-foreground">
                   {formatChave(transacao.tipoChave, transacao.chaveDestino)}
                 </dd>
               </div>
             )}
 
             <div>
-              <dt className="text-xs text-slate-400">Modalidade</dt>
-              <dd className="mt-0.5 font-medium text-slate-200">
+              <dt className="text-xs text-muted-foreground">Modalidade</dt>
+              <dd className="mt-0.5 font-medium text-foreground">
                 {transacao.agendadaPara
                   ? `PIX Agendado para ${formatData(transacao.agendadaPara)}`
                   : "PIX Instantâneo"}
@@ -580,15 +580,15 @@ export function TransacaoDetalhe() {
             </div>
 
             {transacao.descricao && (
-              <div className="border-t border-white/10 pt-3 sm:col-span-2">
-                <dt className="text-xs text-slate-400">Descrição / mensagem</dt>
-                <dd className="mt-0.5 text-slate-200">{transacao.descricao}</dd>
+              <div className="border-t border-border pt-3 sm:col-span-2">
+                <dt className="text-xs text-muted-foreground">Descrição / mensagem</dt>
+                <dd className="mt-0.5 text-foreground">{transacao.descricao}</dd>
               </div>
             )}
 
-            <div className="border-t border-white/10 pt-3 sm:col-span-2">
-              <dt className="text-xs text-slate-400">Código de autenticação (End-to-End ID)</dt>
-              <dd className="mt-0.5 font-mono text-xs text-slate-300">{codigoAutenticacao}</dd>
+            <div className="border-t border-border pt-3 sm:col-span-2">
+              <dt className="text-xs text-muted-foreground">Código de autenticação (End-to-End ID)</dt>
+              <dd className="mt-0.5 font-mono text-xs text-muted-foreground">{codigoAutenticacao}</dd>
             </div>
           </dl>
 
@@ -598,10 +598,10 @@ export function TransacaoDetalhe() {
               type="button"
               variant="outline"
               onClick={() => copiar("comprovante", comprovanteTexto)}
-              className="flex-1 bg-transparent text-slate-100"
+              className="flex-1  text-foreground"
             >
               {copiado === "comprovante" ? (
-                <Check className="size-4 text-emerald-400" />
+                <Check className="size-4 text-emerald-600 dark:text-emerald-400" />
               ) : (
                 <Copy className="size-4" />
               )}
@@ -611,7 +611,7 @@ export function TransacaoDetalhe() {
               type="button"
               variant="outline"
               onClick={() => window.print()}
-              className="bg-transparent text-slate-100"
+              className=" text-foreground"
             >
               <Printer className="size-4" /> Imprimir / Salvar PDF
             </Button>
@@ -625,9 +625,9 @@ export function TransacaoDetalhe() {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <h2 id="loc-detalhe-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                  <MapPin className="size-5 text-teal-300" /> Localização da transação
+                  <MapPin className="size-5 text-primary" /> Localização da transação
                 </h2>
-                <p className="mt-0.5 text-xs text-slate-300">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Funcionalidade 30: registro geográfico da operação para auditoria e segurança.
                 </p>
               </div>
@@ -640,7 +640,7 @@ export function TransacaoDetalhe() {
                     setNovoLocal(transacao.localizacao ?? CIDADES_SUGERIDAS[0])
                     setEditandoLocal(true)
                   }}
-                  className="bg-transparent text-xs text-slate-200"
+                  className=" text-xs text-foreground"
                 >
                   {transacao.localizacao ? "Atualizar" : "Registrar"}
                 </Button>
@@ -648,14 +648,14 @@ export function TransacaoDetalhe() {
             </div>
 
             {!editandoLocal ? (
-              <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+              <div className="rounded-xl border border-border bg-muted/40 p-4">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-teal-400/15 text-teal-300">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-primary">
                     <ShieldCheck className="size-5" />
                   </span>
                   <div>
-                    <p className="text-xs text-slate-400">Local registrado</p>
-                    <p id="localizacao-atual" className="text-sm font-medium text-white">
+                    <p className="text-xs text-muted-foreground">Local registrado</p>
+                    <p id="localizacao-atual" className="text-sm font-medium text-foreground">
                       {transacao.localizacao ?? "Localização ainda não registrada"}
                     </p>
                   </div>
@@ -664,7 +664,7 @@ export function TransacaoDetalhe() {
             ) : (
               <form onSubmit={handleSalvarLocalizacao} className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="input-localizacao" className="text-xs text-slate-300">
+                  <Label htmlFor="input-localizacao" className="text-xs text-muted-foreground">
                     Informe ou capture a localização da transação
                   </Label>
                   <div className="flex gap-2">
@@ -680,12 +680,12 @@ export function TransacaoDetalhe() {
                       variant="outline"
                       disabled={capturandoGeo}
                       onClick={capturarGps}
-                      className="h-10 shrink-0 bg-transparent text-slate-200"
+                      className="h-10 shrink-0  text-foreground"
                     >
                       {capturandoGeo ? (
                         <Loader2 className="size-4 animate-spin" />
                       ) : (
-                        <LocateFixed className="size-4 text-teal-300" />
+                        <LocateFixed className="size-4 text-primary" />
                       )}
                       GPS
                     </Button>
@@ -700,8 +700,8 @@ export function TransacaoDetalhe() {
                       onClick={() => setNovoLocal(cid)}
                       className={`rounded-md border px-2 py-1 text-[11px] transition-colors ${
                         novoLocal === cid
-                          ? "border-teal-400/50 bg-teal-400/15 text-teal-200"
-                          : "border-white/10 bg-white/5 text-slate-400 hover:text-slate-200"
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border bg-muted/50 text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {cid.split(" (")[0]}
@@ -716,7 +716,7 @@ export function TransacaoDetalhe() {
                     size="sm"
                     disabled={salvandoLocal}
                     onClick={() => setEditandoLocal(false)}
-                    className="text-slate-300"
+                    className="text-muted-foreground"
                   >
                     Cancelar
                   </Button>
@@ -725,7 +725,7 @@ export function TransacaoDetalhe() {
                     type="submit"
                     size="sm"
                     disabled={salvandoLocal || !novoLocal.trim()}
-                    className="bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
+                    className="bg-primary text-primary-foreground"
                   >
                     {salvandoLocal ? <Loader2 className="size-4 animate-spin" /> : "Salvar localização"}
                   </Button>
@@ -738,9 +738,9 @@ export function TransacaoDetalhe() {
           <section aria-labelledby="acoes-transacao-titulo" className={`${cardClass} flex flex-col gap-5`}>
             <div>
               <h2 id="acoes-transacao-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                <ReceiptText className="size-5 text-teal-300" /> Ações da transação
+                <ReceiptText className="size-5 text-primary" /> Ações da transação
               </h2>
-              <p className="mt-0.5 text-xs text-slate-300">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 {cfg.descricao}
               </p>
             </div>
@@ -750,15 +750,15 @@ export function TransacaoDetalhe() {
               className={`flex flex-col gap-3 rounded-xl border p-4 ${
                 transacao.status === "PENDENTE"
                   ? "border-amber-500/35 bg-amber-500/10"
-                  : "border-white/10 bg-white/[0.03]"
+                  : "border-border bg-muted/40"
               }`}
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                    <CalendarClock className="size-4 text-amber-300" /> Cancelar transação pendente
+                  <h3 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                    <CalendarClock className="size-4 text-amber-700 dark:text-amber-400" /> Cancelar transação pendente
                   </h3>
-                  <p className="mt-0.5 text-xs text-slate-300">
+                  <p className="mt-0.5 text-xs text-muted-foreground">
                     {transacao.status === "PENDENTE"
                       ? "Esta transação está PENDENTE e pode ser cancelada imediatamente antes do processamento."
                       : `Indisponível: a transação está ${cfg.label.toLowerCase()} (apenas transações PENDENTE podem ser canceladas).`}
@@ -773,7 +773,7 @@ export function TransacaoDetalhe() {
                 disabled={transacao.status !== "PENDENTE"}
                 onClick={() => setDialogCancelar(true)}
                 className={
-                  transacao.status !== "PENDENTE" ? "bg-transparent text-slate-400" : undefined
+                  transacao.status !== "PENDENTE" ? " text-muted-foreground" : undefined
                 }
               >
                 <XCircle className="size-4" /> Cancelar transação pendente
@@ -784,15 +784,15 @@ export function TransacaoDetalhe() {
             <div
               className={`flex flex-col gap-3 rounded-xl border p-4 ${
                 transacao.status === "CONCLUIDA"
-                  ? "border-teal-400/30 bg-teal-400/[0.06]"
-                  : "border-white/10 bg-white/[0.03]"
+                  ? "border-border bg-muted/40"
+                  : "border-border bg-muted/40"
               }`}
             >
               <div>
-                <h3 className="flex items-center gap-1.5 text-sm font-semibold text-white">
-                  <RotateCcw className="size-4 text-teal-300" /> Solicitar estorno (devolução PIX)
+                <h3 className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                  <RotateCcw className="size-4 text-primary" /> Solicitar estorno (devolução PIX)
                 </h3>
-                <p className="mt-0.5 text-xs text-slate-300">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   {transacao.status === "CONCLUIDA"
                     ? `Devolve ${formatBRL(transacao.valor)} da conta ${transacao.contaDestino} para a conta ${transacao.contaOrigem}.`
                     : transacao.status === "ESTORNADA"
@@ -802,8 +802,8 @@ export function TransacaoDetalhe() {
               </div>
 
               {destinoSemSaldoEstorno && (
-                <p className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-200">
-                  <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-300" />
+                <p className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-800 dark:text-amber-300">
+                  <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-amber-400" />
                   <span>
                     Atenção: a conta de destino ({transacao.contaDestino}) tem saldo atual de{" "}
                     <strong>{formatBRL(saldoDestinoParaEstorno)}</strong>, inferior a{" "}
@@ -820,8 +820,8 @@ export function TransacaoDetalhe() {
                 onClick={() => setDialogEstornar(true)}
                 className={
                   transacao.status === "CONCLUIDA"
-                    ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
-                    : "bg-white/10 text-slate-400"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "bg-muted text-muted-foreground"
                 }
               >
                 <RotateCcw className="size-4" /> Solicitar estorno da transação

@@ -13,7 +13,7 @@ export default function TransacaoDetalhePage() {
     <main className="flex flex-col gap-8">
       <Suspense
         fallback={
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-8 text-sm text-slate-300 backdrop-blur-xl">
+          <div className="rounded-2xl border border-border bg-muted/40 p-8 text-sm text-muted-foreground backdrop-blur-xl">
             Carregando detalhes da transação...
           </div>
         }

@@ -38,9 +38,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="identifier" className="text-slate-200">
-          CPF ou e-mail
-        </Label>
+        <Label htmlFor="identifier">CPF ou e-mail</Label>
         <Input
           id="identifier"
           autoComplete="username"
@@ -49,19 +47,16 @@ export function LoginForm() {
           onChange={(e) => setIdentifier(e.target.value)}
           aria-invalid={!!errors.identifier}
           aria-describedby={errors.identifier ? "identifier-error" : undefined}
-          className="border-white/15 bg-white/5 text-white placeholder:text-slate-500"
         />
         {errors.identifier && (
-          <p id="identifier-error" className="text-xs text-red-400">
+          <p id="identifier-error" className="text-xs text-destructive">
             {errors.identifier}
           </p>
         )}
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="password" className="text-slate-200">
-          Senha
-        </Label>
+        <Label htmlFor="password">Senha</Label>
         <PasswordInput
           id="password"
           autoComplete="current-password"
@@ -70,27 +65,21 @@ export function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           aria-invalid={!!errors.password}
           aria-describedby={errors.password ? "password-error" : undefined}
-          className="border-white/15 bg-white/5 text-white placeholder:text-slate-500"
         />
         {errors.password && (
-          <p id="password-error" className="text-xs text-red-400">
+          <p id="password-error" className="text-xs text-destructive">
             {errors.password}
           </p>
         )}
       </div>
 
-      <Button
-        id="login-submit"
-        type="submit"
-        disabled={loading}
-        className="h-11 bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 transition-all hover:from-teal-300 hover:to-emerald-400 hover:shadow-lg hover:shadow-teal-500/30"
-      >
+      <Button id="login-submit" type="submit" size="lg" disabled={loading} className="w-full">
         {loading ? <Loader2 className="size-4 animate-spin" /> : "Entrar"}
       </Button>
 
-      <p className="text-center text-sm text-slate-400">
+      <p className="text-center text-sm text-muted-foreground">
         Ainda não tem conta?{" "}
-        <Link href="/cadastro" className="font-medium text-teal-300 hover:underline">
+        <Link href="/cadastro" className="font-medium text-foreground underline underline-offset-4">
           Cadastre-se
         </Link>
       </p>

@@ -75,7 +75,7 @@ import type { ChavePix, Contato } from "@/lib/types"
 
 const delay = (ms = 650) => new Promise((r) => setTimeout(r, ms))
 
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
+const inputClass = ""
 
 const iconesChave: Record<string, LucideIcon> = {
   CPF: FileText,
@@ -156,7 +156,7 @@ export function ContatosManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Contatos PIX</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Cadastre favorecidos e integre suas chaves PIX para enviar e agendar transferências com um clique.
           </p>
         </div>
@@ -167,7 +167,7 @@ export function ContatosManager() {
             setAviso(null)
             setDialog({ tipo: "criar" })
           }}
-          className="h-10 bg-gradient-to-r from-teal-400 to-emerald-500 px-4 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+          className="h-10 bg-primary px-4 text-primary-foreground hover:bg-primary/90"
         >
           <UserPlus className="size-4" /> Novo contato
         </Button>
@@ -176,10 +176,10 @@ export function ContatosManager() {
       {/* Barra de busca e estatísticas */}
       <section
         aria-label="Buscar contatos"
-        className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl sm:px-6"
+        className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4 text-card-foreground shadow-xs sm:px-6"
       >
         <div className="relative min-w-64 flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" />
+          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             id="buscar-contato-input"
             value={busca}
@@ -192,21 +192,21 @@ export function ContatosManager() {
               type="button"
               aria-label="Limpar busca"
               onClick={() => setBusca("")}
-              className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-white"
+              className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
               <X className="size-4" />
             </button>
           )}
         </div>
 
-        <div className="flex items-center gap-4 text-xs text-slate-300">
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span>
-            <strong className="text-white">{contatos.length}</strong>{" "}
+            <strong className="text-foreground">{contatos.length}</strong>{" "}
             {contatos.length === 1 ? "contato salvo" : "contatos salvos"}
           </span>
           <span>·</span>
           <span>
-            <strong className="text-teal-300">
+            <strong className="text-primary">
               {contatos.reduce((acc, c) => acc + c.chavesPix.length, 0)}
             </strong>{" "}
             chaves integradas
@@ -217,19 +217,19 @@ export function ContatosManager() {
       {aviso && (
         <p
           role="status"
-          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
         >
           <CheckCircle2 className="size-4 shrink-0" /> {aviso}
         </p>
       )}
 
       {contatosFiltrados.length === 0 ? (
-        <section className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-white/20 bg-white/[0.04] px-6 py-16 text-center backdrop-blur-xl">
-          <Users className="size-10 text-slate-400" />
+        <section className="flex flex-col items-center gap-3 rounded-xl border border-dashed bg-muted/30 px-6 py-16 text-center ">
+          <Users className="size-10 text-muted-foreground" />
           <h2 className="text-lg font-semibold">
             {busca ? "Nenhum contato corresponde à busca" : "Sua agenda PIX está vazia"}
           </h2>
-          <p className="max-w-sm text-sm text-slate-300">
+          <p className="max-w-sm text-sm text-muted-foreground">
             {busca
               ? "Tente buscar por outro nome, documento ou valor de chave PIX."
               : "Adicione seus contatos e associe as chaves PIX deles para agilizar suas transferências."}
@@ -238,7 +238,7 @@ export function ContatosManager() {
             <Button
               variant="outline"
               onClick={() => setBusca("")}
-              className="bg-transparent text-slate-100"
+              className=" text-foreground"
             >
               Limpar filtro
             </Button>
@@ -246,7 +246,7 @@ export function ContatosManager() {
             <Button
               variant="outline"
               onClick={() => setDialog({ tipo: "criar" })}
-              className="bg-transparent text-slate-100"
+              className=" text-foreground"
             >
               <UserPlus className="size-4" /> Adicionar primeiro contato
             </Button>
@@ -260,7 +260,7 @@ export function ContatosManager() {
               <li key={c.usuarioId}>
                 <article
                   aria-label={`Contato ${c.nome}`}
-                  className="flex h-full flex-col justify-between gap-5 rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl transition-colors hover:border-teal-300/30"
+                  className="flex h-full flex-col justify-between gap-5 rounded-xl border bg-card p-6 text-card-foreground shadow-xs transition-colors hover:border-teal-300/30"
                 >
                   <div className="flex flex-col gap-4">
                     {/* Cabeçalho do contato */}
@@ -271,48 +271,48 @@ export function ContatosManager() {
                         </span>
                         <div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <h2 className="text-lg font-semibold tracking-tight text-white">
+                            <h2 className="text-lg font-semibold tracking-tight text-foreground">
                               {c.nome}
                             </h2>
                             {c.apelido && (
-                              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-medium text-teal-200">
+                              <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground">
                                 {c.apelido}
                               </span>
                             )}
                           </div>
-                          <p className="mt-0.5 text-xs text-slate-400">
+                          <p className="mt-0.5 text-xs text-muted-foreground">
                             {ehCnpj ? `CNPJ ${maskCnpj(c.cpf)}` : `CPF ${maskCpf(c.cpf)}`} · Conta{" "}
-                            <strong className="text-slate-200">{c.numeroConta}</strong>
+                            <strong className="text-foreground">{c.numeroConta}</strong>
                           </p>
                         </div>
                       </div>
 
                       {c.contaBloqueada && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2.5 py-0.5 text-[11px] font-medium text-red-300">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2.5 py-0.5 text-[11px] font-medium text-destructive">
                           <Lock className="size-3" /> Conta bloqueada
                         </span>
                       )}
                     </div>
 
                     {/* Dados de contato (e-mail e telefone) */}
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-300">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
                       {c.email && (
                         <span className="inline-flex items-center gap-1.5">
-                          <Mail className="size-3.5 text-slate-400" /> {c.email}
+                          <Mail className="size-3.5 text-muted-foreground" /> {c.email}
                         </span>
                       )}
                       {c.telefone && (
                         <span className="inline-flex items-center gap-1.5">
-                          <Phone className="size-3.5 text-slate-400" /> {maskTelefone(c.telefone)}
+                          <Phone className="size-3.5 text-muted-foreground" /> {maskTelefone(c.telefone)}
                         </span>
                       )}
                     </div>
 
                     {/* Chaves PIX integradas ao contato (Funcionalidade 26) */}
-                    <div className="flex flex-col gap-2.5 border-t border-white/10 pt-4">
+                    <div className="flex flex-col gap-2.5 border-t border-border pt-4">
                       <div className="flex items-center justify-between">
-                        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
-                          <KeyRound className="size-3.5 text-teal-300" /> Chaves PIX ({c.chavesPix.length})
+                        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                          <KeyRound className="size-3.5 text-primary" /> Chaves PIX ({c.chavesPix.length})
                         </span>
                         <button
                           type="button"
@@ -320,14 +320,14 @@ export function ContatosManager() {
                             setAviso(null)
                             setDialog({ tipo: "nova-chave", contato: c })
                           }}
-                          className="inline-flex items-center gap-1 text-xs font-medium text-teal-300 hover:underline"
+                          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
                         >
                           <Plus className="size-3.5" /> Adicionar chave
                         </button>
                       </div>
 
                       {c.chavesPix.length === 0 ? (
-                        <p className="rounded-xl border border-dashed border-white/15 py-3 text-center text-xs text-slate-400">
+                        <p className="rounded-xl border border-dashed border-input py-3 text-center text-xs text-muted-foreground">
                           Nenhuma chave vinculada a este contato.
                         </p>
                       ) : (
@@ -342,22 +342,22 @@ export function ContatosManager() {
                                 className={`flex items-center justify-between gap-2 rounded-xl border px-3 py-2 text-xs ${
                                   k.suspensa
                                     ? "border-amber-500/30 bg-amber-500/10"
-                                    : "border-white/10 bg-white/[0.04]"
+                                    : "border-border bg-muted/40"
                                 }`}
                               >
                                 <div className="flex min-w-0 items-center gap-2">
-                                  <Icon className="size-3.5 shrink-0 text-teal-300" />
-                                  <span className="font-medium text-slate-200">
+                                  <Icon className="size-3.5 shrink-0 text-primary" />
+                                  <span className="font-medium text-foreground">
                                     {tipoInfo[k.tipo as TipoChave]?.label ?? k.tipo}:
                                   </span>
                                   <span
-                                    className="truncate font-mono text-slate-300"
+                                    className="truncate font-mono text-muted-foreground"
                                     title={chaveFmt}
                                   >
                                     {chaveFmt}
                                   </span>
                                   {k.suspensa && (
-                                    <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-medium text-amber-300">
+                                    <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
                                       Suspensa
                                     </span>
                                   )}
@@ -368,10 +368,10 @@ export function ContatosManager() {
                                     type="button"
                                     onClick={() => copiar(idCopia, k.valor)}
                                     title="Copiar chave"
-                                    className="rounded p-1 text-slate-400 hover:bg-white/10 hover:text-white"
+                                    className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
                                   >
                                     {copiado === idCopia ? (
-                                      <Check className="size-3.5 text-emerald-400" />
+                                      <Check className="size-3.5 text-emerald-600 dark:text-emerald-400" />
                                     ) : (
                                       <Copy className="size-3.5" />
                                     )}
@@ -381,7 +381,7 @@ export function ContatosManager() {
                                       type="button"
                                       onClick={() => handleRemoverChaveContato(c.usuarioId, k.valor)}
                                       title="Desvincular chave do contato"
-                                      className="rounded p-1 text-slate-400 hover:bg-rose-500/15 hover:text-rose-300"
+                                      className="rounded p-1 text-muted-foreground hover:bg-rose-500/15 hover:text-rose-600 dark:text-rose-600 dark:text-rose-400"
                                     >
                                       <X className="size-3.5" />
                                     </button>
@@ -396,12 +396,12 @@ export function ContatosManager() {
                   </div>
 
                   {/* Rodapé de ações do card (Transferir, Editar, Excluir) */}
-                  <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
+                  <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4">
                     <Button
                       render={<Link href="/transferir" />}
                       nativeButton={false}
                       size="sm"
-                      className="bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+                      className="bg-primary text-primary-foreground hover:bg-primary/90"
                     >
                       <Send className="size-3.5" /> Transferir PIX
                     </Button>
@@ -413,7 +413,7 @@ export function ContatosManager() {
                         setAviso(null)
                         setDialog({ tipo: "editar", contato: c })
                       }}
-                      className="bg-transparent text-slate-100"
+                      className=" text-foreground"
                     >
                       <Pencil className="size-3.5" /> Editar
                     </Button>

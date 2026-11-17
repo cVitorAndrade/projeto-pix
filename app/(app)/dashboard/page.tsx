@@ -34,19 +34,19 @@ const atalhos = [
 ]
 
 const statusEstilo: Record<StatusTransacao, { label: string; className: string }> = {
-  PENDENTE: { label: "Pendente", className: "bg-amber-500/20 text-amber-300" },
-  CONCLUIDA: { label: "Concluída", className: "bg-emerald-500/20 text-emerald-300" },
-  CANCELADA: { label: "Cancelada", className: "bg-slate-500/30 text-slate-300" },
-  ESTORNADA: { label: "Estornada", className: "bg-indigo-500/25 text-indigo-300" },
+  PENDENTE: { label: "Pendente", className: "bg-amber-500/15 text-amber-700 dark:text-amber-400" },
+  CONCLUIDA: { label: "Concluída", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400" },
+  CANCELADA: { label: "Cancelada", className: "bg-muted text-muted-foreground" },
+  ESTORNADA: { label: "Estornada", className: "bg-indigo-500/15 text-indigo-700 dark:text-indigo-400" },
 }
 
 const alertaEstilo = {
-  critico: { icon: ShieldAlert, className: "border-red-500/30 bg-red-500/10 text-red-300" },
-  aviso: { icon: TriangleAlert, className: "border-amber-500/30 bg-amber-500/10 text-amber-300" },
-  info: { icon: Info, className: "border-sky-500/30 bg-sky-500/10 text-sky-300" },
+  critico: { icon: ShieldAlert, className: "border-destructive/30 bg-destructive/10 text-destructive" },
+  aviso: { icon: TriangleAlert, className: "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300" },
+  info: { icon: Info, className: "border-border bg-muted/60 text-foreground" },
 }
 
-const card = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl"
+const card = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs"
 
 export default function DashboardPage() {
   const conta = contaMock
@@ -57,8 +57,8 @@ export default function DashboardPage() {
   return (
     <main className="flex flex-col gap-8">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Olá, {primeiroNome} 👋</h1>
-        <p className="mt-1 text-sm text-slate-300">Aqui está o resumo da sua conta.</p>
+        <h1 className="text-3xl font-semibold tracking-tight">Olá, {primeiroNome}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Aqui está o resumo da sua conta.</p>
       </div>
 
       <SaldoCard
@@ -72,9 +72,9 @@ export default function DashboardPage() {
           <Link
             key={href}
             href={href}
-            className="group flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-5 text-sm font-medium backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-teal-300/40 hover:bg-white/10"
+            className="group flex flex-col items-center gap-3 rounded-xl border bg-card px-4 py-5 text-sm font-medium text-card-foreground shadow-xs transition-colors hover:bg-accent hover:text-accent-foreground"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-300 to-emerald-500 text-slate-950 shadow-lg shadow-teal-500/20 transition-transform group-hover:scale-110">
+            <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
               <Icon className="size-5" />
             </span>
             {label}
@@ -88,17 +88,17 @@ export default function DashboardPage() {
             <h2 id="transacoes-titulo" className="text-lg font-semibold">
               Últimas transações
             </h2>
-            <Link href="/extrato" className="text-sm font-medium text-teal-300 hover:underline">
+            <Link href="/extrato" className="text-sm font-medium text-primary hover:underline">
               Ver extrato
             </Link>
           </div>
 
           {transacoes.length === 0 ? (
-            <p className="py-8 text-center text-sm text-slate-400">
+            <p className="py-8 text-center text-sm text-muted-foreground">
               Você ainda não fez nenhuma transação.
             </p>
           ) : (
-            <ul className="divide-y divide-white/10">
+            <ul className="divide-y divide-border">
               {transacoes.map((t) => {
                 const enviada = t.contaOrigem === conta.numeroConta
                 const contraparte = enviada ? t.contaDestino : t.contaOrigem
@@ -107,11 +107,13 @@ export default function DashboardPage() {
                   <li key={t.id}>
                     <Link
                       href={`/transacoes/${t.id}`}
-                      className="-mx-2 flex items-center gap-4 rounded-xl px-2 py-3 transition-colors hover:bg-white/[0.04]"
+                      className="-mx-2 flex items-center gap-4 rounded-lg px-2 py-3 transition-colors hover:bg-muted/60"
                     >
                       <span
                         className={`flex size-10 shrink-0 items-center justify-center rounded-full ${
-                          enviada ? "bg-rose-500/15 text-rose-300" : "bg-emerald-500/15 text-emerald-300"
+                          enviada
+                            ? "bg-rose-500/15 text-rose-600 dark:text-rose-400"
+                            : "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
                         }`}
                       >
                         {enviada ? <ArrowUpRight className="size-5" /> : <ArrowDownLeft className="size-5" />}
@@ -120,14 +122,16 @@ export default function DashboardPage() {
                         <p className="truncate text-sm font-medium">
                           {enviada ? "PIX enviado" : "PIX recebido"}
                         </p>
-                        <p className="truncate text-xs text-slate-400">
+                        <p className="truncate text-xs text-muted-foreground">
                           {enviada ? "Para" : "De"} conta {contraparte} · {formatDataHora(t.dataHora)}
                         </p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         <span
                           className={`text-sm font-semibold ${
-                            enviada ? "text-rose-300" : "text-emerald-300"
+                            enviada
+                              ? "text-rose-600 dark:text-rose-400"
+                              : "text-emerald-600 dark:text-emerald-400"
                           }`}
                         >
                           {enviada ? "−" : "+"} {formatBRL(t.valor)}
@@ -146,11 +150,11 @@ export default function DashboardPage() {
 
         <section aria-labelledby="alertas-titulo" className={card}>
           <h2 id="alertas-titulo" className="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <BellRing className="size-5 text-teal-300" /> Alertas
+            <BellRing className="size-5 text-muted-foreground" /> Alertas
           </h2>
 
           {alertas.length === 0 ? (
-            <p className="flex flex-col items-center gap-2 py-8 text-center text-sm text-slate-400">
+            <p className="flex flex-col items-center gap-2 py-8 text-center text-sm text-muted-foreground">
               <CircleAlert className="size-6" /> Tudo certo por aqui. Nenhum alerta no momento.
             </p>
           ) : (
@@ -162,7 +166,7 @@ export default function DashboardPage() {
                     <Icon className="mt-0.5 size-5 shrink-0" />
                     <div>
                       <p className="text-sm font-medium">{a.titulo}</p>
-                      <p className="mt-0.5 text-xs text-slate-300">{a.descricao}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">{a.descricao}</p>
                     </div>
                   </>
                 )
@@ -171,12 +175,12 @@ export default function DashboardPage() {
                     {a.href ? (
                       <Link
                         href={a.href}
-                        className={`flex gap-3 rounded-xl border p-3 transition-colors hover:brightness-125 ${className}`}
+                        className={`flex gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/50 ${className}`}
                       >
                         {conteudo}
                       </Link>
                     ) : (
-                      <div className={`flex gap-3 rounded-xl border p-3 ${className}`}>{conteudo}</div>
+                      <div className={`flex gap-3 rounded-lg border p-3 ${className}`}>{conteudo}</div>
                     )}
                   </li>
                 )

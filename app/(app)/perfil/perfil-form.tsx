@@ -28,11 +28,8 @@ import {
 type Field = "nome" | "email" | "telefone"
 type Errors = Partial<Record<Field, string>>
 
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
-
 export function PerfilForm() {
   const router = useRouter()
-  // TODO: carregar via GET /usuarios/{id}
   const [saved, setSaved] = useState({
     nome: usuarioMock.nome,
     email: usuarioMock.email,
@@ -68,8 +65,6 @@ export function PerfilForm() {
     if (Object.keys(next).length) return
 
     setSaving(true)
-    // TODO: PUT /usuarios/{id} com { nome, email, telefone (só dígitos) }.
-    // O CPF não é editável na API. Erros 400/404 -> exibir mensagem da API.
     void {
       nome: values.nome.trim(),
       email: values.email.trim(),
@@ -86,7 +81,6 @@ export function PerfilForm() {
   async function handleDelete() {
     setDeleting(true)
     setDeleteError(null)
-    // TODO: DELETE /usuarios/{id} (204). 409 USUARIO_POSSUI_CONTAS -> setDeleteError(mensagem)
     await new Promise((r) => setTimeout(r, 800))
     setDeleting(false)
     setDialogOpen(false)
@@ -95,15 +89,15 @@ export function PerfilForm() {
 
   return (
     <>
-      <section className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 shadow-2xl backdrop-blur-xl sm:p-8">
+      <section className="rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8">
         <h2 className="text-lg font-semibold">Dados pessoais</h2>
-        <p className="mb-6 mt-1 text-sm text-slate-300">
+        <p className="mb-6 mt-1 text-sm text-muted-foreground">
           Atualize seu nome, e-mail e telefone. O CPF não pode ser alterado.
         </p>
 
         <form onSubmit={handleSave} noValidate className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="nome" className="text-slate-200">Nome completo</Label>
+            <Label htmlFor="nome">Nome completo</Label>
             <Input
               id="nome"
               autoComplete="name"
@@ -111,25 +105,18 @@ export function PerfilForm() {
               onChange={(e) => set("nome", e.target.value)}
               aria-invalid={!!errors.nome}
               aria-describedby={errors.nome ? "nome-error" : undefined}
-              className={inputClass}
             />
-            {errors.nome && <p id="nome-error" className="text-xs text-red-400">{errors.nome}</p>}
+            {errors.nome && <p id="nome-error" className="text-xs text-destructive">{errors.nome}</p>}
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="cpf" className="text-slate-200">CPF</Label>
-            <Input
-              id="cpf"
-              value={maskCpf(usuarioMock.cpf)}
-              disabled
-              readOnly
-              className={inputClass}
-            />
+            <Label htmlFor="cpf">CPF</Label>
+            <Input id="cpf" value={maskCpf(usuarioMock.cpf)} disabled readOnly />
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email" className="text-slate-200">E-mail</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input
                 id="email"
                 type="email"
@@ -139,12 +126,11 @@ export function PerfilForm() {
                 onChange={(e) => set("email", e.target.value)}
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? "email-error" : undefined}
-                className={inputClass}
               />
-              {errors.email && <p id="email-error" className="text-xs text-red-400">{errors.email}</p>}
+              {errors.email && <p id="email-error" className="text-xs text-destructive">{errors.email}</p>}
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="telefone" className="text-slate-200">Telefone</Label>
+              <Label htmlFor="telefone">Telefone</Label>
               <Input
                 id="telefone"
                 type="tel"
@@ -154,44 +140,38 @@ export function PerfilForm() {
                 onChange={(e) => set("telefone", maskTelefone(e.target.value))}
                 aria-invalid={!!errors.telefone}
                 aria-describedby={errors.telefone ? "telefone-error" : undefined}
-                className={inputClass}
               />
               {errors.telefone && (
-                <p id="telefone-error" className="text-xs text-red-400">{errors.telefone}</p>
+                <p id="telefone-error" className="text-xs text-destructive">{errors.telefone}</p>
               )}
             </div>
           </div>
 
           <div className="flex items-center justify-end gap-4">
             {success && (
-              <p role="status" className="mr-auto flex items-center gap-2 text-sm text-emerald-400">
+              <p role="status" className="mr-auto flex items-center gap-2 text-sm text-emerald-600">
                 <CheckCircle2 className="size-4" /> Dados atualizados com sucesso.
               </p>
             )}
-            <Button
-              id="perfil-save"
-              type="submit"
-              disabled={saving || !dirty}
-              className="h-11 bg-gradient-to-r from-teal-400 to-emerald-500 px-6 text-slate-950 transition-all hover:from-teal-300 hover:to-emerald-400 hover:shadow-lg hover:shadow-teal-500/30"
-            >
+            <Button id="perfil-save" type="submit" size="lg" disabled={saving || !dirty}>
               {saving ? <Loader2 className="size-4 animate-spin" /> : "Salvar alterações"}
             </Button>
           </div>
         </form>
       </section>
 
-      <section className="rounded-2xl border border-red-500/30 bg-red-500/[0.06] p-6 backdrop-blur-xl sm:p-8">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-red-300">
+      <section className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 sm:p-8">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-destructive">
           <TriangleAlert className="size-5" /> Zona de perigo
         </h2>
-        <p className="mt-1 text-sm text-slate-300">
+        <p className="mt-1 text-sm text-muted-foreground">
           Excluir seu usuário é uma ação permanente e não pode ser desfeita. Se você
           possuir contas bancárias, elas precisam ser removidas antes.
         </p>
         <Button
           id="perfil-delete"
           variant="destructive"
-          className="mt-5 h-10"
+          className="mt-5"
           onClick={() => {
             setDeleteError(null)
             setDialogOpen(true)

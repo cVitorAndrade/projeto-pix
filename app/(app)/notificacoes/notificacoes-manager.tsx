@@ -28,7 +28,7 @@ import { maskTelefone } from "@/lib/validation"
 
 const delay = (ms = 650) => new Promise((r) => setTimeout(r, ms))
 
-const cardClass = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl sm:p-8"
+const cardClass = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8"
 
 type CategoriaNotificacao = "RECEBIDO" | "ENVIADO" | "ESTORNO" | "AGENDADO" | "SEGURANCA"
 type CanalNotificacao = "APP" | "EMAIL" | "SMS"
@@ -148,28 +148,28 @@ const configCategoria: Record<
 > = {
   RECEBIDO: {
     label: "PIX Recebido",
-    corIcone: "bg-emerald-500/20 text-emerald-300",
-    corBadge: "border-emerald-500/30 bg-emerald-500/15 text-emerald-300",
+    corIcone: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400",
+    corBadge: "border-emerald-500/30 bg-emerald-500/15 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400",
   },
   ENVIADO: {
     label: "PIX Enviado",
-    corIcone: "bg-rose-500/20 text-rose-300",
-    corBadge: "border-rose-500/30 bg-rose-500/15 text-rose-300",
+    corIcone: "bg-rose-500/20 text-rose-600 dark:text-rose-600 dark:text-rose-400",
+    corBadge: "border-rose-500/30 bg-rose-500/15 text-rose-600 dark:text-rose-600 dark:text-rose-400",
   },
   ESTORNO: {
     label: "Estorno PIX",
-    corIcone: "bg-indigo-500/20 text-indigo-300",
-    corBadge: "border-indigo-500/30 bg-indigo-500/15 text-indigo-300",
+    corIcone: "bg-indigo-500/20 text-indigo-700 dark:text-indigo-400",
+    corBadge: "border-indigo-500/30 bg-indigo-500/15 text-indigo-700 dark:text-indigo-400",
   },
   AGENDADO: {
     label: "PIX Agendado",
-    corIcone: "bg-amber-500/20 text-amber-300",
-    corBadge: "border-amber-500/30 bg-amber-500/15 text-amber-300",
+    corIcone: "bg-amber-500/20 text-amber-700 dark:text-amber-400",
+    corBadge: "border-amber-500/30 bg-amber-500/15 text-amber-700 dark:text-amber-400",
   },
   SEGURANCA: {
     label: "Segurança",
-    corIcone: "bg-red-500/20 text-red-300",
-    corBadge: "border-red-500/30 bg-red-500/15 text-red-300",
+    corIcone: "bg-destructive/10 text-destructive",
+    corBadge: "border-red-500/30 bg-red-500/15 text-destructive",
   },
 }
 
@@ -289,7 +289,7 @@ export function NotificacoesManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Notificações</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Acompanhe os alertas de transações PIX enviadas, recebidas e estornadas e configure o envio por SMS ou e-mail.
           </p>
         </div>
@@ -301,12 +301,12 @@ export function NotificacoesManager() {
             variant="outline"
             disabled={simulando}
             onClick={simularNotificacaoTransacao}
-            className="h-10 bg-transparent text-slate-100"
+            className="h-10  text-foreground"
           >
             {simulando ? (
               <Loader2 className="size-4 animate-spin" />
             ) : (
-              <Sparkles className="size-4 text-teal-300" />
+              <Sparkles className="size-4 text-primary" />
             )}
             Testar alerta de transação
           </Button>
@@ -315,7 +315,7 @@ export function NotificacoesManager() {
             type="button"
             disabled={qtdNaoLidas === 0}
             onClick={marcarTodasComoLidas}
-            className="h-10 bg-gradient-to-r from-teal-400 to-emerald-500 px-4 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+            className="h-10 bg-primary px-4 text-primary-foreground hover:bg-primary/90"
           >
             <CheckCheck className="size-4" /> Marcar todas como lidas
           </Button>
@@ -324,53 +324,53 @@ export function NotificacoesManager() {
 
       {/* Cards de resumo rápido */}
       <section aria-label="Resumo das notificações" className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <BellRing className="size-3.5 text-teal-300" /> Não lidas
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <BellRing className="size-3.5 text-primary" /> Não lidas
           </p>
-          <p id="qtd-nao-lidas" className="mt-1 text-2xl font-semibold tracking-tight text-white">
+          <p id="qtd-nao-lidas" className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
             {qtdNaoLidas} {qtdNaoLidas === 1 ? "nova notificação" : "novas notificações"}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             De {notificacoes.length} alertas registrados no histórico
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Mail className="size-3.5 text-emerald-300" /> Notificação por E-mail
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Mail className="size-3.5 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400" /> Notificação por E-mail
           </p>
-          <p className="mt-1 text-lg font-semibold tracking-tight text-white">
+          <p className="mt-1 text-lg font-semibold tracking-tight text-foreground">
             {preferenciasSalvas.emailAtivo ? (
-              <span className="text-emerald-300">Habilitada</span>
+              <span className="text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">Habilitada</span>
             ) : (
-              <span className="text-slate-400">Desativada</span>
+              <span className="text-muted-foreground">Desativada</span>
             )}
           </p>
-          <p className="mt-1 truncate text-xs text-slate-400">{usuarioMock.email}</p>
+          <p className="mt-1 truncate text-xs text-muted-foreground">{usuarioMock.email}</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <MessageSquare className="size-3.5 text-amber-300" /> Notificação por SMS
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <MessageSquare className="size-3.5 text-amber-700 dark:text-amber-400" /> Notificação por SMS
           </p>
-          <p className="mt-1 text-lg font-semibold tracking-tight text-white">
+          <p className="mt-1 text-lg font-semibold tracking-tight text-foreground">
             {preferenciasSalvas.smsAtivo ? (
-              <span className="text-emerald-300">Habilitada</span>
+              <span className="text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">Habilitada</span>
             ) : (
-              <span className="text-slate-400">Desativada</span>
+              <span className="text-muted-foreground">Desativada</span>
             )}
           </p>
-          <p className="mt-1 text-xs text-slate-400">{maskTelefone(usuarioMock.telefone)}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{maskTelefone(usuarioMock.telefone)}</p>
         </div>
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.35fr_1fr]">
         {/* Coluna Esquerda: Central de Notificações (Funcionalidade 17) */}
         <section aria-labelledby="central-notificacoes-titulo" className={`${cardClass} flex flex-col gap-5`}>
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
             <h2 id="central-notificacoes-titulo" className="flex items-center gap-2 text-lg font-semibold">
-              <Bell className="size-5 text-teal-300" /> Histórico de alertas (Funcionalidade 17)
+              <Bell className="size-5 text-primary" /> Histórico de alertas (Funcionalidade 17)
             </h2>
 
             <div
@@ -394,8 +394,8 @@ export function NotificacoesManager() {
                   onClick={() => setFiltro(f.id)}
                   className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                     filtro === f.id
-                      ? "border-teal-400/60 bg-teal-400/20 text-teal-200"
-                      : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                      ? "border-primary bg-primary/10 text-foreground"
+                      : "border-border bg-muted/50 text-muted-foreground hover:bg-muted"
                   }`}
                 >
                   {f.label}
@@ -405,10 +405,10 @@ export function NotificacoesManager() {
           </div>
 
           {notificacoesFiltradas.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 py-16 text-center">
-              <BellOff className="size-10 text-slate-400" />
+            <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-muted/30 py-16 text-center">
+              <BellOff className="size-10 text-muted-foreground" />
               <h3 className="text-base font-semibold">Nenhuma notificação neste filtro</h3>
-              <p className="max-w-xs text-sm text-slate-300">
+              <p className="max-w-xs text-sm text-muted-foreground">
                 Quando ocorrerem novas movimentações PIX na sua conta, os alertas aparecerão aqui.
               </p>
             </div>
@@ -421,8 +421,8 @@ export function NotificacoesManager() {
                     key={n.id}
                     className={`flex flex-col gap-3 rounded-2xl border p-4 transition-colors ${
                       n.lida
-                        ? "border-white/10 bg-white/[0.03]"
-                        : "border-teal-400/40 bg-teal-400/[0.08]"
+                        ? "border-border bg-muted/40"
+                        : "border-primary/40 bg-primary/5"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -451,7 +451,7 @@ export function NotificacoesManager() {
                                 className="size-2 rounded-full bg-teal-300"
                               />
                             )}
-                            <span className="text-sm font-semibold text-white">{n.titulo}</span>
+                            <span className="text-sm font-semibold text-foreground">{n.titulo}</span>
                             <span
                               className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${cfg.corBadge}`}
                             >
@@ -459,18 +459,18 @@ export function NotificacoesManager() {
                             </span>
                           </div>
 
-                          <p className="mt-1 text-xs leading-relaxed text-slate-200">
+                          <p className="mt-1 text-xs leading-relaxed text-foreground">
                             {n.mensagem}
                           </p>
 
-                          <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
+                          <div className="mt-2.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                             <span>{formatDataHora(n.dataHora)}</span>
                             <span>·</span>
                             <span>Enviada via:</span>
                             {n.canais.map((c) => (
                               <span
                                 key={c}
-                                className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[10px] text-slate-300"
+                                className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
                               >
                                 {c}
                               </span>
@@ -480,20 +480,20 @@ export function NotificacoesManager() {
                       </div>
 
                       {n.valor !== undefined && (
-                        <span className="shrink-0 text-sm font-bold text-teal-300">
+                        <span className="shrink-0 text-sm font-bold text-primary">
                           {formatBRL(n.valor)}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-end gap-2 border-t border-white/10 pt-2.5">
+                    <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border pt-2.5">
                       {n.transacaoId && (
                         <Button
                           render={<Link href={`/transacoes/${n.transacaoId}`} />}
                           nativeButton={false}
                           variant="ghost"
                           size="sm"
-                          className="mr-auto h-7 px-2 text-xs text-teal-300 hover:text-teal-200"
+                          className="mr-auto h-7 px-2 text-xs text-primary hover:text-foreground"
                         >
                           <ExternalLink className="size-3.5" /> Ver transação #{n.transacaoId}
                         </Button>
@@ -504,7 +504,7 @@ export function NotificacoesManager() {
                           variant="outline"
                           size="sm"
                           onClick={() => marcarComoLida(n.id)}
-                          className="h-7 bg-transparent px-2.5 text-xs text-slate-200"
+                          className="h-7  px-2.5 text-xs text-foreground"
                         >
                           <Check className="size-3.5" /> Marcar como lida
                         </Button>
@@ -515,7 +515,7 @@ export function NotificacoesManager() {
                         size="sm"
                         aria-label={`Excluir notificação ${n.titulo}`}
                         onClick={() => removerNotificacao(n.id)}
-                        className="h-7 px-2 text-xs text-slate-400 hover:text-rose-300"
+                        className="h-7 px-2 text-xs text-muted-foreground hover:text-rose-600 dark:text-rose-600 dark:text-rose-400"
                       >
                         <Trash2 className="size-3.5" />
                       </Button>
@@ -531,9 +531,9 @@ export function NotificacoesManager() {
         <section aria-labelledby="pref-notificacoes-titulo" className={`${cardClass} flex flex-col gap-5 self-start`}>
           <div>
             <h2 id="pref-notificacoes-titulo" className="flex items-center gap-2 text-lg font-semibold">
-              <BellRing className="size-5 text-teal-300" /> Preferências de envio (25)
+              <BellRing className="size-5 text-primary" /> Preferências de envio (25)
             </h2>
-            <p className="mt-1 text-xs text-slate-300">
+            <p className="mt-1 text-xs text-muted-foreground">
               Funcionalidade 25: habilite ou desabilite o recebimento de avisos de transações PIX por SMS e E-mail.
             </p>
           </div>
@@ -541,13 +541,13 @@ export function NotificacoesManager() {
           <form onSubmit={salvarPreferencias} className="flex flex-col gap-5">
             {/* Canais principais: E-mail e SMS */}
             <div className="flex flex-col gap-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Canais de comunicação
               </span>
 
               <CanalSwitchCard
                 id="switch-email"
-                icone={<Mail className="size-5 text-teal-300" />}
+                icone={<Mail className="size-5 text-primary" />}
                 titulo="Notificações por E-mail"
                 subtitulo={`Enviar comprovantes e avisos para ${usuarioMock.email}`}
                 ativo={preferencias.emailAtivo}
@@ -559,7 +559,7 @@ export function NotificacoesManager() {
 
               <CanalSwitchCard
                 id="switch-sms"
-                icone={<MessageSquare className="size-5 text-amber-300" />}
+                icone={<MessageSquare className="size-5 text-amber-700 dark:text-amber-400" />}
                 titulo="Notificações por SMS"
                 subtitulo={`Enviar alertas rápidos via torpedo para ${maskTelefone(usuarioMock.telefone)}`}
                 ativo={preferencias.smsAtivo}
@@ -571,8 +571,8 @@ export function NotificacoesManager() {
             </div>
 
             {/* Eventos monitorados */}
-            <fieldset className="flex flex-col gap-2.5 border-t border-white/10 pt-4">
-              <legend className="mb-1 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
+              <legend className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Eventos que disparam alertas
               </legend>
 
@@ -624,7 +624,7 @@ export function NotificacoesManager() {
             {avisoPref && (
               <p
                 role="status"
-                className="flex items-start gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-300"
+                className="flex items-start gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-xs text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
               >
                 <CheckCircle2 className="mt-0.5 size-4 shrink-0" /> {avisoPref}
               </p>
@@ -634,7 +634,7 @@ export function NotificacoesManager() {
               id="salvar-preferencias-btn"
               type="submit"
               disabled={salvandoPref || !houveAlteracaoPref}
-              className="h-11 bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+              className="h-11 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {salvandoPref ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -668,19 +668,19 @@ function CanalSwitchCard({
     <div
       className={`flex items-center justify-between gap-4 rounded-xl border p-4 transition-colors ${
         ativo
-          ? "border-teal-400/40 bg-teal-400/10"
-          : "border-white/10 bg-white/[0.03]"
+          ? "border-primary bg-primary/5"
+          : "border-border bg-muted/40"
       }`}
     >
       <div className="flex items-start gap-3">
-        <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-white/10">
+        <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted">
           {icone}
         </span>
         <div>
-          <label htmlFor={id} className="cursor-pointer text-sm font-semibold text-white">
+          <label htmlFor={id} className="cursor-pointer text-sm font-semibold text-foreground">
             {titulo}
           </label>
-          <p className="mt-0.5 text-xs text-slate-300">{subtitulo}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{subtitulo}</p>
         </div>
       </div>
 
@@ -720,7 +720,7 @@ function EventoCheckbox({
   return (
     <label
       htmlFor={id}
-      className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-3 transition-colors hover:bg-white/[0.06]"
+      className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-muted/40 p-3 transition-colors hover:bg-muted/40"
     >
       <input
         id={id}
@@ -730,8 +730,8 @@ function EventoCheckbox({
         className="mt-1 size-4 rounded border-white/20 accent-teal-400"
       />
       <div>
-        <span className="text-xs font-semibold text-white">{label}</span>
-        <p className="mt-0.5 text-[11px] text-slate-400">{descricao}</p>
+        <span className="text-xs font-semibold text-foreground">{label}</span>
+        <p className="mt-0.5 text-[11px] text-muted-foreground">{descricao}</p>
       </div>
     </label>
   )

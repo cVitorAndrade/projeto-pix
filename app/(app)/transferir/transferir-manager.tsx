@@ -62,8 +62,8 @@ import type { Conta, Contato, Transacao } from "@/lib/types"
 
 const delay = (ms = 750) => new Promise((r) => setTimeout(r, ms))
 
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
-const cardClass = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl sm:p-8"
+const inputClass = ""
+const cardClass = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8"
 
 const iconesChave: Record<string, LucideIcon> = {
   CPF: FileText,
@@ -94,12 +94,7 @@ const CIDADES_SUGERIDAS = [
 ]
 
 const VALORES_RAPIDOS = [20, 50, 100, 500]
-
-function amanhaISO() {
-  const d = new Date()
-  d.setDate(d.getDate() + 1)
-  return d.toISOString().slice(0, 10)
-}
+const DATA_MINIMA_AGENDAMENTO = "2026-11-18"
 
 function agoraLocalISO() {
   const d = new Date()
@@ -128,7 +123,7 @@ export function TransferirManager() {
   // Etapa 2: Valor, Agendamento (31) e Localização (30)
   const [valorTxt, setValorTxt] = useState("")
   const [modalidade, setModalidade] = useState<"agora" | "agendar">("agora")
-  const [dataAgendamento, setDataAgendamento] = useState(amanhaISO)
+  const [dataAgendamento, setDataAgendamento] = useState(DATA_MINIMA_AGENDAMENTO)
   const [descricao, setDescricao] = useState("")
   const [localizacao, setLocalizacao] = useState(CIDADES_SUGERIDAS[0])
   const [capturandoGeo, setCapturandoGeo] = useState(false)
@@ -441,7 +436,7 @@ export function TransferirManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Transferir PIX</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Escolha um contato ou digite uma chave, defina o valor, envie na hora ou agende.
           </p>
         </div>
@@ -453,14 +448,14 @@ export function TransferirManager() {
       {etapa < 4 && (
         <section
           aria-label="Conta de origem"
-          className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl sm:px-6"
+          className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4 text-card-foreground shadow-xs sm:px-6"
         >
           <div className="flex flex-wrap items-center gap-3">
-            <span className="flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-300 to-emerald-500 text-slate-950">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Wallet className="size-5" />
             </span>
             <div>
-              <Label htmlFor="conta-origem-select" className="text-xs text-slate-400">
+              <Label htmlFor="conta-origem-select" className="text-xs text-muted-foreground">
                 Conta de origem
               </Label>
               <div className="mt-0.5 flex items-center gap-2">
@@ -476,7 +471,7 @@ export function TransferirManager() {
                       setErroDestino(conferirRegrasDestino(destino, novaOrigem))
                     }
                   }}
-                  className="h-9 rounded-lg border border-white/15 bg-slate-900 px-3 text-sm font-medium text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-70"
+                  className="h-9 rounded-lg border border-input bg-background px-3 text-sm font-medium text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-70"
                 >
                   {contas.map((c) => (
                     <option key={c.numeroConta} value={c.numeroConta}>
@@ -486,11 +481,11 @@ export function TransferirManager() {
                   ))}
                 </select>
                 {contaOrigem.bloqueada ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2.5 py-0.5 text-xs font-medium text-red-300">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive">
                     <Lock className="size-3" /> Bloqueada
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-medium text-emerald-300">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
                     Ativa
                   </span>
                 )}
@@ -500,14 +495,14 @@ export function TransferirManager() {
 
           <div className="flex items-center gap-6 text-right">
             <div>
-              <p className="text-xs text-slate-400">Saldo disponível</p>
-              <p id="saldo-origem" className="text-lg font-semibold text-teal-300" aria-live="polite">
+              <p className="text-xs text-muted-foreground">Saldo disponível</p>
+              <p id="saldo-origem" className="text-lg font-semibold text-primary" aria-live="polite">
                 {formatBRL(contaOrigem.saldo)}
               </p>
             </div>
-            <div className="hidden border-l border-white/10 pl-6 sm:block">
-              <p className="text-xs text-slate-400">Limite por PIX</p>
-              <p className="text-sm font-medium text-slate-200">{formatBRL(LIMITE_POR_PIX)}</p>
+            <div className="hidden border-l border-border pl-6 sm:block">
+              <p className="text-xs text-muted-foreground">Limite por PIX</p>
+              <p className="text-sm font-medium text-foreground">{formatBRL(LIMITE_POR_PIX)}</p>
             </div>
           </div>
         </section>
@@ -516,7 +511,7 @@ export function TransferirManager() {
       {contaOrigem.bloqueada && etapa < 4 && (
         <p
           role="alert"
-          className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
+          className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
         >
           <Lock className="mt-0.5 size-4 shrink-0" />
           Conta de origem bloqueada: selecione outra conta ativa ou desbloqueie esta conta em Minhas Contas.
@@ -529,13 +524,13 @@ export function TransferirManager() {
           <section aria-labelledby="destino-titulo" className={`${cardClass} flex flex-col gap-5`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 id="destino-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                <KeyRound className="size-5 text-teal-300" /> 1. Para quem você quer transferir?
+                <KeyRound className="size-5 text-primary" /> 1. Para quem você quer transferir?
               </h2>
 
               <div
                 role="tablist"
                 aria-label="Modo de escolha do destinatário"
-                className="inline-flex rounded-xl border border-white/10 bg-slate-900/80 p-1"
+                className="inline-flex rounded-xl border border-border bg-muted p-1"
               >
                 <button
                   type="button"
@@ -545,8 +540,8 @@ export function TransferirManager() {
                   onClick={() => setModoDestino("contato")}
                   className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                     modoDestino === "contato"
-                      ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
-                      : "text-slate-300 hover:text-white"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <Users className="size-3.5" /> Contatos ({contatos.length})
@@ -559,8 +554,8 @@ export function TransferirManager() {
                   onClick={() => setModoDestino("chave")}
                   className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                     modoDestino === "chave"
-                      ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
-                      : "text-slate-300 hover:text-white"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <KeyRound className="size-3.5" /> Digitar chave
@@ -570,12 +565,12 @@ export function TransferirManager() {
 
             {modoDestino === "contato" ? (
               <div className="flex flex-col gap-4">
-                <p className="text-sm text-slate-300">
+                <p className="text-sm text-muted-foreground">
                   Selecione um contato salvo e escolha qual chave PIX dele usar, ou alterne para{" "}
                   <button
                     type="button"
                     onClick={() => setModoDestino("chave")}
-                    className="font-medium text-teal-300 underline-offset-4 hover:underline"
+                    className="font-medium text-primary underline-offset-4 hover:underline"
                   >
                     digitar outra chave
                   </button>
@@ -583,15 +578,15 @@ export function TransferirManager() {
                 </p>
 
                 {contatos.length === 0 ? (
-                  <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-white/15 py-10 text-center">
-                    <Users className="size-8 text-slate-400" />
-                    <p className="text-sm text-slate-300">Sua lista de contatos PIX está vazia.</p>
+                  <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed border-input py-10 text-center">
+                    <Users className="size-8 text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground">Sua lista de contatos PIX está vazia.</p>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={() => setModoDestino("chave")}
-                      className="mt-1 bg-transparent text-slate-100"
+                      className="mt-1  text-foreground"
                     >
                       Digitar uma chave PIX
                     </Button>
@@ -605,21 +600,21 @@ export function TransferirManager() {
                           key={c.usuarioId}
                           className={`rounded-xl border p-4 transition-colors ${
                             selecionado
-                              ? "border-teal-400/50 bg-teal-400/10"
-                              : "border-white/10 bg-white/[0.03] hover:border-white/20"
+                              ? "border-primary bg-primary/5"
+                              : "border-border bg-muted/40 hover:border-white/20"
                           }`}
                         >
                           <div className="flex flex-wrap items-start justify-between gap-2">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-medium text-white">{c.nome}</span>
+                                <span className="font-medium text-foreground">{c.nome}</span>
                                 {c.apelido && (
-                                  <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-slate-300">
+                                  <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
                                     {c.apelido}
                                   </span>
                                 )}
                               </div>
-                              <p className="mt-0.5 text-xs text-slate-400">
+                              <p className="mt-0.5 text-xs text-muted-foreground">
                                 Conta {c.numeroConta} ·{" "}
                                 {c.cpf.length === 14 ? `CNPJ ${maskCnpj(c.cpf)}` : `CPF ${maskCpf(c.cpf)}`}
                               </p>
@@ -627,7 +622,7 @@ export function TransferirManager() {
                             <button
                               type="button"
                               onClick={() => handleRemoverContato(c.usuarioId, c.nome)}
-                              className="text-xs text-slate-400 hover:text-rose-300"
+                              className="text-xs text-muted-foreground hover:text-rose-600 dark:text-rose-600 dark:text-rose-400"
                             >
                               Remover
                             </button>
@@ -644,10 +639,10 @@ export function TransferirManager() {
                                   onClick={() => handleSelecionarChaveContato(c, k.valor)}
                                   className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs transition-all ${
                                     ativa
-                                      ? "border-teal-300 bg-teal-400/20 font-medium text-teal-200 shadow-sm"
+                                      ? "border-primary bg-primary/10 font-medium text-foreground shadow-sm"
                                       : k.suspensa
-                                        ? "border-amber-500/30 bg-amber-500/10 text-amber-300"
-                                        : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10"
+                                        ? "border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                                        : "border-border bg-muted/50 text-foreground hover:bg-muted"
                                   }`}
                                 >
                                   <Icon className="size-3.5" />
@@ -656,7 +651,7 @@ export function TransferirManager() {
                                     {formatChave(k.tipo, k.valor).slice(0, 22)}
                                   </span>
                                   {k.suspensa && (
-                                    <span className="rounded bg-amber-500/20 px-1 text-[10px] text-amber-300">
+                                    <span className="rounded bg-amber-500/20 px-1 text-[10px] text-amber-700 dark:text-amber-400">
                                       suspensa
                                     </span>
                                   )}
@@ -673,7 +668,7 @@ export function TransferirManager() {
             ) : (
               <form onSubmit={handleValidarChave} noValidate className="flex flex-col gap-4">
                 <fieldset className="flex flex-col gap-2">
-                  <legend className="mb-1 text-xs font-medium text-slate-300">
+                  <legend className="mb-1 text-xs font-medium text-muted-foreground">
                     Tipo de chave PIX (Funcionalidade 10)
                   </legend>
                   <div role="radiogroup" aria-label="Tipo de chave PIX" className="flex flex-wrap gap-2">
@@ -693,8 +688,8 @@ export function TransferirManager() {
                           }}
                           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
                             ativo
-                              ? "border-teal-300 bg-teal-400/20 text-teal-200"
-                              : "border-white/15 bg-white/5 text-slate-300 hover:bg-white/10"
+                              ? "border-primary bg-primary/10 text-foreground"
+                              : "border-input bg-muted/50 text-muted-foreground hover:bg-muted"
                           }`}
                         >
                           <Icon className="size-3.5" />
@@ -706,7 +701,7 @@ export function TransferirManager() {
                 </fieldset>
 
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="chave-destino-input" className="text-slate-200">
+                  <Label htmlFor="chave-destino-input" className="text-foreground">
                     Chave de destino ({tipoInfo[tipoChave].label})
                   </Label>
                   <div className="flex gap-2">
@@ -731,12 +726,12 @@ export function TransferirManager() {
                       type="submit"
                       disabled={validandoChave}
                       variant="outline"
-                      className="h-10 shrink-0 border-teal-400/40 bg-teal-400/10 text-teal-200 hover:bg-teal-400/20"
+                      className="h-10 shrink-0 border-primary bg-primary/5 text-foreground hover:bg-muted"
                     >
                       {validandoChave ? <Loader2 className="size-4 animate-spin" /> : "Validar chave"}
                     </Button>
                   </div>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-muted-foreground">
                     Exemplos cadastrados no sistema:{" "}
                     <button
                       type="button"
@@ -745,7 +740,7 @@ export function TransferirManager() {
                         setChaveDigitada("pedro@email.com")
                         setErroDestino(null)
                       }}
-                      className="font-mono text-teal-300 hover:underline"
+                      className="font-mono text-primary hover:underline"
                     >
                       pedro@email.com
                     </button>
@@ -757,7 +752,7 @@ export function TransferirManager() {
                         setChaveDigitada(mascararEntrada("CPF", "98765432100"))
                         setErroDestino(null)
                       }}
-                      className="font-mono text-teal-300 hover:underline"
+                      className="font-mono text-primary hover:underline"
                     >
                       987.654.321-00
                     </button>
@@ -769,7 +764,7 @@ export function TransferirManager() {
                         setChaveDigitada(mascararEntrada("TELEFONE", "85988888888"))
                         setErroDestino(null)
                       }}
-                      className="font-mono text-teal-300 hover:underline"
+                      className="font-mono text-primary hover:underline"
                     >
                       (85) 98888-8888 (sua 2ª conta)
                     </button>
@@ -781,7 +776,7 @@ export function TransferirManager() {
             {avisoContato && (
               <p
                 role="status"
-                className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-300"
+                className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-2.5 text-xs text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
               >
                 <CheckCircle2 className="size-4 shrink-0" /> {avisoContato}
               </p>
@@ -791,7 +786,7 @@ export function TransferirManager() {
               <p
                 id="destino-erro"
                 role="alert"
-                className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-300"
+                className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-xs text-destructive"
               >
                 <TriangleAlert className="mt-0.5 size-4 shrink-0" /> {erroDestino}
               </p>
@@ -802,53 +797,53 @@ export function TransferirManager() {
           <section aria-labelledby="resumo-destino-titulo" className={`${cardClass} flex flex-col justify-between gap-6`}>
             <div className="flex flex-col gap-4">
               <h2 id="resumo-destino-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                <ShieldCheck className="size-5 text-teal-300" /> Destinatário validado
+                <ShieldCheck className="size-5 text-primary" /> Destinatário validado
               </h2>
 
               {!destino ? (
-                <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 py-12 text-center">
+                <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-input py-12 text-center">
                   <KeyRound className="size-9 text-slate-500" />
-                  <p className="max-w-xs text-sm text-slate-400">
+                  <p className="max-w-xs text-sm text-muted-foreground">
                     Selecione um contato ao lado ou digite e valide uma chave PIX para conferir os dados do recebedor.
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-4">
+                <div className="flex flex-col gap-4 rounded-xl border border-border bg-muted/40 p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-xs text-slate-400">Recebedor</p>
-                      <p className="text-base font-semibold text-white">{destino.titularNome}</p>
-                      <p className="text-xs text-slate-400">
+                      <p className="text-xs text-muted-foreground">Recebedor</p>
+                      <p className="text-base font-semibold text-foreground">{destino.titularNome}</p>
+                      <p className="text-xs text-muted-foreground">
                         {destino.titularDocumento.length === 14
                           ? `CNPJ ${maskCnpj(destino.titularDocumento)}`
                           : `CPF ${maskCpf(destino.titularDocumento)}`}
                       </p>
                     </div>
                     {destino.suspensa || destino.contaBloqueada ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2.5 py-1 text-xs font-medium text-red-300">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive">
                         <XCircle className="size-3.5" /> Indisponível
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-300">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
                         <CheckCircle2 className="size-3.5" /> Chave ativa
                       </span>
                     )}
                   </div>
 
-                  <dl className="grid grid-cols-2 gap-3 border-t border-white/10 pt-3 text-xs">
+                  <dl className="grid grid-cols-2 gap-3 border-t border-border pt-3 text-xs">
                     <div>
-                      <dt className="text-slate-400">Conta destino</dt>
-                      <dd className="mt-0.5 font-medium text-slate-100">{destino.numeroConta}</dd>
+                      <dt className="text-muted-foreground">Conta destino</dt>
+                      <dd className="mt-0.5 font-medium text-foreground">{destino.numeroConta}</dd>
                     </div>
                     <div>
-                      <dt className="text-slate-400">Tipo de chave</dt>
-                      <dd className="mt-0.5 font-medium text-slate-100">
+                      <dt className="text-muted-foreground">Tipo de chave</dt>
+                      <dd className="mt-0.5 font-medium text-foreground">
                         {tipoInfo[destino.tipo]?.label ?? destino.tipo}
                       </dd>
                     </div>
                     <div className="col-span-2">
-                      <dt className="text-slate-400">Chave PIX</dt>
-                      <dd className="mt-0.5 break-all font-mono text-slate-200">
+                      <dt className="text-muted-foreground">Chave PIX</dt>
+                      <dd className="mt-0.5 break-all font-mono text-foreground">
                         {formatChave(destino.tipo, destino.chave)}
                       </dd>
                     </div>
@@ -856,9 +851,9 @@ export function TransferirManager() {
 
                   {/* Funcionalidade 26: Integrar chave validada com Contatos */}
                   {destino.usuarioId !== usuarioMock.id && (
-                    <div className="border-t border-white/10 pt-3">
+                    <div className="border-t border-border pt-3">
                       {jaEhContato ? (
-                        <span className="inline-flex items-center gap-1.5 text-xs text-teal-300">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-primary">
                           <UserCheck className="size-3.5" /> Salvo nos seus contatos PIX
                         </span>
                       ) : (
@@ -867,7 +862,7 @@ export function TransferirManager() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleSalvarNosContatos(destino)}
-                          className="h-8 bg-transparent text-xs text-slate-200"
+                          className="h-8  text-xs text-foreground"
                         >
                           <UserPlus className="size-3.5" /> Salvar destinatário nos contatos
                         </Button>
@@ -883,7 +878,7 @@ export function TransferirManager() {
               type="button"
               disabled={!destino || !!erroDestino || contaOrigem.bloqueada}
               onClick={avancarParaValor}
-              className="h-11 w-full bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+              className="h-11 w-full bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Continuar para valor e data <ArrowRight className="size-4" />
             </Button>
@@ -896,11 +891,11 @@ export function TransferirManager() {
         <form onSubmit={avancarParaConfirmacao} noValidate className="grid gap-6 lg:grid-cols-[1.2fr_1fr]">
           <section aria-labelledby="valor-titulo" className={`${cardClass} flex flex-col gap-5`}>
             <h2 id="valor-titulo" className="flex items-center gap-2 text-lg font-semibold">
-              <Send className="size-5 text-teal-300" /> 2. Valor e quando enviar
+              <Send className="size-5 text-primary" /> 2. Valor e quando enviar
             </h2>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="valor-pix" className="text-slate-200">
+              <Label htmlFor="valor-pix" className="text-foreground">
                 Valor da transferência (R$)
               </Label>
               <Input
@@ -928,7 +923,7 @@ export function TransferirManager() {
                       setValorTxt(soma.toFixed(2).replace(".", ","))
                       setErroValor(null)
                     }}
-                    className="rounded-lg border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-slate-200 transition-colors hover:border-teal-300/40 hover:bg-white/10"
+                    className="rounded-lg border border-input bg-muted/50 px-3 py-1 text-xs font-medium text-foreground transition-colors hover:border-teal-300/40 hover:bg-muted"
                   >
                     + {formatBRL(inc)}
                   </button>
@@ -936,13 +931,13 @@ export function TransferirManager() {
               </div>
 
               {valorNumerico > 0 && (
-                <p className="mt-1 text-xs text-slate-300">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Saldo previsto após envio:{" "}
                   <span
                     className={
                       contaOrigem.saldo - valorNumerico < 0
-                        ? "font-semibold text-red-400"
-                        : "font-semibold text-teal-300"
+                        ? "font-semibold text-destructive"
+                        : "font-semibold text-primary"
                     }
                   >
                     {formatBRL(contaOrigem.saldo - valorNumerico)}
@@ -952,8 +947,8 @@ export function TransferirManager() {
             </div>
 
             {/* Funcionalidade 31: Realizar Pix Agendado vs Enviar Agora */}
-            <fieldset className="flex flex-col gap-2.5 border-t border-white/10 pt-4">
-              <legend className="text-sm font-medium text-slate-200">
+            <fieldset className="flex flex-col gap-2.5 border-t border-border pt-4">
+              <legend className="text-sm font-medium text-foreground">
                 Quando realizar o PIX? (Funcionalidades 12 e 31)
               </legend>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -966,14 +961,14 @@ export function TransferirManager() {
                   }}
                   className={`flex items-start gap-3 rounded-xl border p-3.5 text-left transition-colors ${
                     modalidade === "agora"
-                      ? "border-teal-400 bg-teal-400/15"
-                      : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]"
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-muted/40 hover:bg-muted/40"
                   }`}
                 >
-                  <Zap className="mt-0.5 size-5 shrink-0 text-teal-300" />
+                  <Zap className="mt-0.5 size-5 shrink-0 text-primary" />
                   <div>
-                    <p className="text-sm font-semibold text-white">Enviar agora</p>
-                    <p className="text-xs text-slate-300">
+                    <p className="text-sm font-semibold text-foreground">Enviar agora</p>
+                    <p className="text-xs text-muted-foreground">
                       Transferência instantânea 24h com débito imediato em conta.
                     </p>
                   </div>
@@ -988,14 +983,14 @@ export function TransferirManager() {
                   }}
                   className={`flex items-start gap-3 rounded-xl border p-3.5 text-left transition-colors ${
                     modalidade === "agendar"
-                      ? "border-teal-400 bg-teal-400/15"
-                      : "border-white/10 bg-white/[0.03] hover:bg-white/[0.06]"
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-muted/40 hover:bg-muted/40"
                   }`}
                 >
-                  <CalendarClock className="mt-0.5 size-5 shrink-0 text-amber-300" />
+                  <CalendarClock className="mt-0.5 size-5 shrink-0 text-amber-700 dark:text-amber-400" />
                   <div>
-                    <p className="text-sm font-semibold text-white">Agendar PIX</p>
-                    <p className="text-xs text-slate-300">
+                    <p className="text-sm font-semibold text-foreground">Agendar PIX</p>
+                    <p className="text-xs text-muted-foreground">
                       Programe para uma data futura (fica pendente até a data).
                     </p>
                   </div>
@@ -1004,13 +999,13 @@ export function TransferirManager() {
 
               {modalidade === "agendar" && (
                 <div className="mt-2 flex flex-col gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5">
-                  <Label htmlFor="data-agendamento" className="text-xs font-medium text-amber-200">
+                  <Label htmlFor="data-agendamento" className="text-xs font-medium text-amber-800 dark:text-amber-300">
                     Data programada para o envio
                   </Label>
                   <Input
                     id="data-agendamento"
                     type="date"
-                    min={amanhaISO()}
+                    min={DATA_MINIMA_AGENDAMENTO}
                     value={dataAgendamento}
                     onChange={(e) => {
                       setDataAgendamento(e.target.value)
@@ -1018,7 +1013,7 @@ export function TransferirManager() {
                     }}
                     className={inputClass}
                   />
-                  <p className="text-xs text-amber-200/80">
+                  <p className="text-xs text-amber-800 dark:text-amber-300/80">
                     O PIX agendado ficará com status <strong>PENDENTE</strong> e poderá ser cancelado antes da execução.
                   </p>
                 </div>
@@ -1026,7 +1021,7 @@ export function TransferirManager() {
             </fieldset>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="descricao-pix" className="text-slate-200">
+              <Label htmlFor="descricao-pix" className="text-foreground">
                 Descrição / mensagem (opcional)
               </Label>
               <Input
@@ -1043,7 +1038,7 @@ export function TransferirManager() {
               <p
                 id="valor-erro"
                 role="alert"
-                className="flex items-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-300"
+                className="flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-xs text-destructive"
               >
                 <TriangleAlert className="mt-0.5 size-4 shrink-0" /> {erroValor}
               </p>
@@ -1054,14 +1049,14 @@ export function TransferirManager() {
           <section aria-labelledby="localizacao-titulo" className={`${cardClass} flex flex-col justify-between gap-6`}>
             <div className="flex flex-col gap-4">
               <h2 id="localizacao-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                <MapPin className="size-5 text-teal-300" /> Localização da transação
+                <MapPin className="size-5 text-primary" /> Localização da transação
               </h2>
-              <p className="-mt-2 text-xs text-slate-300">
+              <p className="-mt-2 text-xs text-muted-foreground">
                 Funcionalidade 30: registramos o local da operação para rastreabilidade e prevenção a fraudes.
               </p>
 
               <div className="flex flex-col gap-2">
-                <Label htmlFor="localizacao-input" className="text-slate-200">
+                <Label htmlFor="localizacao-input" className="text-foreground">
                   Localização atual
                 </Label>
                 <div className="flex gap-2">
@@ -1077,13 +1072,13 @@ export function TransferirManager() {
                     variant="outline"
                     disabled={capturandoGeo}
                     onClick={capturarGeolocalizacao}
-                    className="h-10 shrink-0 bg-transparent text-slate-200"
+                    className="h-10 shrink-0  text-foreground"
                     title="Detectar via GPS do navegador"
                   >
                     {capturandoGeo ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
-                      <LocateFixed className="size-4 text-teal-300" />
+                      <LocateFixed className="size-4 text-primary" />
                     )}
                     GPS
                   </Button>
@@ -1097,8 +1092,8 @@ export function TransferirManager() {
                       onClick={() => setLocalizacao(cid)}
                       className={`rounded-md border px-2 py-1 text-[11px] transition-colors ${
                         localizacao === cid
-                          ? "border-teal-400/50 bg-teal-400/15 text-teal-200"
-                          : "border-white/10 bg-white/5 text-slate-400 hover:text-slate-200"
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border bg-muted/50 text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {cid.split(" (")[0]}
@@ -1107,11 +1102,11 @@ export function TransferirManager() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 text-xs">
-                <p className="font-medium text-slate-200">Para: {destino.titularNome}</p>
-                <p className="mt-0.5 text-slate-400">
+              <div className="rounded-xl border border-border bg-muted/40 p-4 text-xs">
+                <p className="font-medium text-foreground">Para: {destino.titularNome}</p>
+                <p className="mt-0.5 text-muted-foreground">
                   Conta {destino.numeroConta} · Chave {tipoInfo[destino.tipo]?.label}:{" "}
-                  <span className="font-mono text-slate-300">
+                  <span className="font-mono text-muted-foreground">
                     {formatChave(destino.tipo, destino.chave)}
                   </span>
                 </p>
@@ -1123,14 +1118,14 @@ export function TransferirManager() {
                 type="button"
                 variant="outline"
                 onClick={() => setEtapa(1)}
-                className="h-11 bg-transparent text-slate-100"
+                className="h-11  text-foreground"
               >
                 <ArrowLeft className="size-4" /> Voltar
               </Button>
               <Button
                 id="avancar-etapa-2"
                 type="submit"
-                className="h-11 flex-1 bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+                className="h-11 flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 Revisar transferência <ArrowRight className="size-4" />
               </Button>
@@ -1145,17 +1140,17 @@ export function TransferirManager() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 id="confirmar-titulo" className="flex items-center gap-2 text-xl font-semibold">
-                <Sparkles className="size-5 text-teal-300" /> 3. Confirme os dados do PIX
+                <Sparkles className="size-5 text-primary" /> 3. Confirme os dados do PIX
               </h2>
-              <p className="mt-1 text-sm text-slate-300">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Confira atentamente as informações antes de concluir a operação.
               </p>
             </div>
             <span
               className={`rounded-full px-3 py-1 text-xs font-medium ${
                 modalidade === "agendar"
-                  ? "bg-amber-500/20 text-amber-300"
-                  : "bg-emerald-500/20 text-emerald-300"
+                  ? "bg-amber-500/20 text-amber-700 dark:text-amber-400"
+                  : "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
               }`}
             >
               {modalidade === "agendar" ? "PIX Agendado" : "Envio Imediato"}
@@ -1163,52 +1158,52 @@ export function TransferirManager() {
           </div>
 
           <div className="rounded-2xl border border-teal-400/30 bg-gradient-to-br from-teal-500/15 to-emerald-500/5 p-5 text-center">
-            <p className="text-xs uppercase tracking-wider text-slate-300">Valor da transferência</p>
-            <p className="mt-1 text-4xl font-bold tracking-tight text-teal-300">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Valor da transferência</p>
+            <p className="mt-1 text-4xl font-bold tracking-tight text-primary">
               {formatBRL(valorNumerico)}
             </p>
             {modalidade === "agendar" ? (
-              <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-amber-300">
+              <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400">
                 <CalendarClock className="size-3.5" /> Agendado para {formatData(dataAgendamento)}
               </p>
             ) : (
-              <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-emerald-300">
+              <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
                 <Zap className="size-3.5" /> Sai da conta agora · Novo saldo:{" "}
                 {formatBRL(contaOrigem.saldo - valorNumerico)}
               </p>
             )}
           </div>
 
-          <dl className="grid gap-4 rounded-xl border border-white/10 bg-white/[0.03] p-5 text-sm sm:grid-cols-2">
+          <dl className="grid gap-4 rounded-xl border border-border bg-muted/40 p-5 text-sm sm:grid-cols-2">
             <div>
-              <dt className="text-xs text-slate-400">Quem recebe (Destino)</dt>
-              <dd className="mt-0.5 font-semibold text-white">{destino.titularNome}</dd>
-              <dd className="text-xs text-slate-400">Conta {destino.numeroConta}</dd>
+              <dt className="text-xs text-muted-foreground">Quem recebe (Destino)</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">{destino.titularNome}</dd>
+              <dd className="text-xs text-muted-foreground">Conta {destino.numeroConta}</dd>
             </div>
             <div>
-              <dt className="text-xs text-slate-400">Chave PIX utilizada</dt>
-              <dd className="mt-0.5 font-medium text-white">
+              <dt className="text-xs text-muted-foreground">Chave PIX utilizada</dt>
+              <dd className="mt-0.5 font-medium text-foreground">
                 {tipoInfo[destino.tipo]?.label ?? destino.tipo}
               </dd>
-              <dd className="break-all font-mono text-xs text-slate-300">
+              <dd className="break-all font-mono text-xs text-muted-foreground">
                 {formatChave(destino.tipo, destino.chave)}
               </dd>
             </div>
-            <div className="border-t border-white/10 pt-3">
-              <dt className="text-xs text-slate-400">Quem envia (Origem)</dt>
-              <dd className="mt-0.5 font-medium text-white">{contaOrigem.usuarioNome}</dd>
-              <dd className="text-xs text-slate-400">Conta {contaOrigem.numeroConta}</dd>
+            <div className="border-t border-border pt-3">
+              <dt className="text-xs text-muted-foreground">Quem envia (Origem)</dt>
+              <dd className="mt-0.5 font-medium text-foreground">{contaOrigem.usuarioNome}</dd>
+              <dd className="text-xs text-muted-foreground">Conta {contaOrigem.numeroConta}</dd>
             </div>
-            <div className="border-t border-white/10 pt-3">
-              <dt className="text-xs text-slate-400">Localização registrada (Func. 30)</dt>
-              <dd className="mt-0.5 flex items-center gap-1.5 font-medium text-slate-200">
-                <MapPin className="size-3.5 shrink-0 text-teal-300" /> {localizacao}
+            <div className="border-t border-border pt-3">
+              <dt className="text-xs text-muted-foreground">Localização registrada (Func. 30)</dt>
+              <dd className="mt-0.5 flex items-center gap-1.5 font-medium text-foreground">
+                <MapPin className="size-3.5 shrink-0 text-primary" /> {localizacao}
               </dd>
             </div>
             {descricao.trim() && (
-              <div className="border-t border-white/10 pt-3 sm:col-span-2">
-                <dt className="text-xs text-slate-400">Descrição</dt>
-                <dd className="mt-0.5 text-slate-200">{descricao}</dd>
+              <div className="border-t border-border pt-3 sm:col-span-2">
+                <dt className="text-xs text-muted-foreground">Descrição</dt>
+                <dd className="mt-0.5 text-foreground">{descricao}</dd>
               </div>
             )}
           </dl>
@@ -1216,7 +1211,7 @@ export function TransferirManager() {
           {erroConfirmacao && (
             <p
               role="alert"
-              className="flex items-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-300"
+              className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-xs text-destructive"
             >
               <TriangleAlert className="size-4 shrink-0" /> {erroConfirmacao}
             </p>
@@ -1228,7 +1223,7 @@ export function TransferirManager() {
               variant="outline"
               disabled={enviando}
               onClick={() => setEtapa(2)}
-              className="h-11 bg-transparent text-slate-100"
+              className="h-11  text-foreground"
             >
               <ArrowLeft className="size-4" /> Alterar valor
             </Button>
@@ -1237,7 +1232,7 @@ export function TransferirManager() {
               type="button"
               disabled={enviando}
               onClick={confirmarTransferencia}
-              className="h-11 flex-1 bg-gradient-to-r from-teal-400 to-emerald-500 font-semibold text-slate-950 shadow-lg shadow-teal-500/20 hover:from-teal-300 hover:to-emerald-400"
+              className="h-11 flex-1 bg-primary font-semibold text-primary-foreground shadow-lg shadow-teal-500/20 hover:bg-primary/90"
             >
               {enviando ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -1289,10 +1284,10 @@ function Stepper({ etapa }: { etapa: Etapa }) {
               aria-current={atual ? "step" : undefined}
               className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 font-medium transition-colors ${
                 atual
-                  ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
+                  ? "bg-primary text-primary-foreground"
                   : concluido
-                    ? "bg-emerald-500/20 text-emerald-300"
-                    : "border border-white/10 bg-white/5 text-slate-400"
+                    ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
+                    : "border border-border bg-muted/50 text-muted-foreground"
               }`}
             >
               <span className="font-bold">{concluido ? "✓" : p.num}</span>
@@ -1342,25 +1337,25 @@ function ComprovanteCard({
       titulo: "PIX enviado com sucesso!",
       subtitulo: "O valor já foi creditado na conta de destino.",
       badge: "Concluída",
-      cor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+      cor: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
     },
     PENDENTE: {
       titulo: "PIX agendado com sucesso!",
       subtitulo: `Programado para ${transacao.agendadaPara ? formatData(transacao.agendadaPara) : "data futura"}.`,
       badge: "Pendente · Agendado",
-      cor: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+      cor: "bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30",
     },
     CANCELADA: {
       titulo: "Agendamento PIX cancelado",
       subtitulo: "Esta transação pendente foi cancelada e não será debitada.",
       badge: "Cancelada",
-      cor: "bg-slate-500/30 text-slate-300 border-slate-500/40",
+      cor: "bg-slate-500/30 text-muted-foreground border-slate-500/40",
     },
     ESTORNADA: {
       titulo: "PIX estornado",
       subtitulo: "O valor foi devolvido à conta de origem.",
       badge: "Estornada",
-      cor: "bg-indigo-500/20 text-indigo-300 border-indigo-500/30",
+      cor: "bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 border-indigo-500/30",
     },
   }[transacao.status]
 
@@ -1370,7 +1365,7 @@ function ComprovanteCard({
       className={`${cardClass} mx-auto flex w-full max-w-2xl flex-col gap-6`}
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <span className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-300 to-emerald-500 text-slate-950 shadow-lg shadow-teal-500/20">
+        <span className="flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-teal-500/20">
           {transacao.status === "PENDENTE" ? (
             <CalendarClock className="size-7" />
           ) : transacao.status === "CANCELADA" ? (
@@ -1385,57 +1380,57 @@ function ComprovanteCard({
         <h2 id="comprovante-titulo" className="mt-1 text-2xl font-semibold tracking-tight">
           {statusBadge.titulo}
         </h2>
-        <p className="text-sm text-slate-300">{statusBadge.subtitulo}</p>
-        <p id="comprovante-valor" className="mt-2 text-4xl font-bold tracking-tight text-teal-300">
+        <p className="text-sm text-muted-foreground">{statusBadge.subtitulo}</p>
+        <p id="comprovante-valor" className="mt-2 text-4xl font-bold tracking-tight text-primary">
           {formatBRL(transacao.valor)}
         </p>
       </div>
 
-      <dl className="grid gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-5 text-sm sm:grid-cols-2">
+      <dl className="grid gap-3 rounded-xl border border-border bg-muted/40 p-5 text-sm sm:grid-cols-2">
         <div>
-          <dt className="text-xs text-slate-400">ID da transação</dt>
-          <dd className="mt-0.5 font-mono font-semibold text-white">#{transacao.id}</dd>
+          <dt className="text-xs text-muted-foreground">ID da transação</dt>
+          <dd className="mt-0.5 font-mono font-semibold text-foreground">#{transacao.id}</dd>
         </div>
         <div>
-          <dt className="text-xs text-slate-400">Data e hora do registro</dt>
-          <dd className="mt-0.5 font-medium text-white">{formatDataHora(transacao.dataHora)}</dd>
+          <dt className="text-xs text-muted-foreground">Data e hora do registro</dt>
+          <dd className="mt-0.5 font-medium text-foreground">{formatDataHora(transacao.dataHora)}</dd>
         </div>
         {transacao.agendadaPara && (
           <div className="sm:col-span-2">
-            <dt className="text-xs text-amber-300">Data programada (PIX Agendado)</dt>
-            <dd className="mt-0.5 font-semibold text-amber-200">{formatData(transacao.agendadaPara)}</dd>
+            <dt className="text-xs text-amber-700 dark:text-amber-400">Data programada (PIX Agendado)</dt>
+            <dd className="mt-0.5 font-semibold text-amber-800 dark:text-amber-300">{formatData(transacao.agendadaPara)}</dd>
           </div>
         )}
-        <div className="border-t border-white/10 pt-3">
-          <dt className="text-xs text-slate-400">Destinatário</dt>
-          <dd className="mt-0.5 font-semibold text-white">{destino.titularNome}</dd>
-          <dd className="text-xs text-slate-400">
+        <div className="border-t border-border pt-3">
+          <dt className="text-xs text-muted-foreground">Destinatário</dt>
+          <dd className="mt-0.5 font-semibold text-foreground">{destino.titularNome}</dd>
+          <dd className="text-xs text-muted-foreground">
             Conta {transacao.contaDestino} · {tipoInfo[destino.tipo]?.label}:{" "}
             {formatChave(destino.tipo, destino.chave)}
           </dd>
         </div>
-        <div className="border-t border-white/10 pt-3">
-          <dt className="text-xs text-slate-400">Pagador (Origem)</dt>
-          <dd className="mt-0.5 font-semibold text-white">{usuarioMock.nome}</dd>
-          <dd className="text-xs text-slate-400">
+        <div className="border-t border-border pt-3">
+          <dt className="text-xs text-muted-foreground">Pagador (Origem)</dt>
+          <dd className="mt-0.5 font-semibold text-foreground">{usuarioMock.nome}</dd>
+          <dd className="text-xs text-muted-foreground">
             Conta {transacao.contaOrigem} · Saldo atual: {formatBRL(saldoAtualOrigem)}
           </dd>
         </div>
-        <div className="border-t border-white/10 pt-3 sm:col-span-2">
-          <dt className="text-xs text-slate-400">Localização registrada (Func. 30)</dt>
-          <dd className="mt-0.5 flex items-center gap-1.5 text-slate-200">
-            <MapPin className="size-3.5 text-teal-300" /> {transacao.localizacao}
+        <div className="border-t border-border pt-3 sm:col-span-2">
+          <dt className="text-xs text-muted-foreground">Localização registrada (Func. 30)</dt>
+          <dd className="mt-0.5 flex items-center gap-1.5 text-foreground">
+            <MapPin className="size-3.5 text-primary" /> {transacao.localizacao}
           </dd>
         </div>
         {transacao.descricao && (
-          <div className="border-t border-white/10 pt-3 sm:col-span-2">
-            <dt className="text-xs text-slate-400">Descrição</dt>
-            <dd className="mt-0.5 text-slate-200">{transacao.descricao}</dd>
+          <div className="border-t border-border pt-3 sm:col-span-2">
+            <dt className="text-xs text-muted-foreground">Descrição</dt>
+            <dd className="mt-0.5 text-foreground">{transacao.descricao}</dd>
           </div>
         )}
-        <div className="border-t border-white/10 pt-3 sm:col-span-2">
-          <dt className="text-xs text-slate-400">Código de autenticação</dt>
-          <dd className="mt-0.5 font-mono text-xs text-slate-300">{codigoAutenticacao}</dd>
+        <div className="border-t border-border pt-3 sm:col-span-2">
+          <dt className="text-xs text-muted-foreground">Código de autenticação</dt>
+          <dd className="mt-0.5 font-mono text-xs text-muted-foreground">{codigoAutenticacao}</dd>
         </div>
       </dl>
 
@@ -1444,16 +1439,16 @@ function ComprovanteCard({
           type="button"
           variant="outline"
           onClick={() => copiar("comprovante", resumoTexto)}
-          className="flex-1 bg-transparent text-slate-100"
+          className="flex-1  text-foreground"
         >
-          {copiado === "comprovante" ? <Check className="text-emerald-400" /> : <Copy />}
+          {copiado === "comprovante" ? <Check className="text-emerald-600 dark:text-emerald-400" /> : <Copy />}
           {copiado === "comprovante" ? "Comprovante copiado" : "Copiar comprovante"}
         </Button>
         <Button
           type="button"
           variant="outline"
           onClick={() => window.print()}
-          className="bg-transparent text-slate-100"
+          className=" text-foreground"
         >
           <Printer className="size-4" /> Imprimir
         </Button>
@@ -1471,12 +1466,12 @@ function ComprovanteCard({
         )}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
         <Button
           render={<Link href="/dashboard" />}
           nativeButton={false}
           variant="ghost"
-          className="text-slate-300 hover:text-white"
+          className="text-muted-foreground hover:text-foreground"
         >
           <Landmark className="size-4" /> Voltar ao início
         </Button>
@@ -1484,7 +1479,7 @@ function ComprovanteCard({
           id="nova-transferencia-btn"
           type="button"
           onClick={onNovaTransferencia}
-          className="bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+          className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
           <RotateCcw className="size-4" /> Fazer outra transferência
         </Button>

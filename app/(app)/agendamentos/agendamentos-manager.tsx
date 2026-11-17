@@ -60,11 +60,7 @@ type DialogEstado =
   | { tipo: "cancelar"; transacao: Transacao }
   | null
 
-function amanhaISO() {
-  const d = new Date()
-  d.setDate(d.getDate() + 1)
-  return d.toISOString().slice(0, 10)
-}
+const DATA_MINIMA_AGENDAMENTO = "2026-11-18"
 
 function agoraLocalISO() {
   const d = new Date()
@@ -75,19 +71,19 @@ function agoraLocalISO() {
 const statusEstilo: Record<StatusTransacao, { label: string; className: string }> = {
   PENDENTE: {
     label: "Agendado · Pendente",
-    className: "border-amber-500/30 bg-amber-500/20 text-amber-300",
+    className: "border-amber-500/30 bg-amber-500/20 text-amber-700 dark:text-amber-400",
   },
   CONCLUIDA: {
     label: "Executado",
-    className: "border-emerald-500/30 bg-emerald-500/20 text-emerald-300",
+    className: "border-emerald-500/30 bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400",
   },
   CANCELADA: {
     label: "Cancelado",
-    className: "border-slate-500/40 bg-slate-500/30 text-slate-300",
+    className: "border-slate-500/40 bg-slate-500/30 text-muted-foreground",
   },
   ESTORNADA: {
     label: "Estornado",
-    className: "border-indigo-500/30 bg-indigo-500/25 text-indigo-300",
+    className: "border-indigo-500/30 bg-indigo-500/25 text-indigo-700 dark:text-indigo-400",
   },
 }
 
@@ -155,7 +151,7 @@ export function AgendamentosManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">PIX Agendados</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Gerencie suas transferências programadas: edite valor ou data, agende novos envios ou cancele pendentes.
           </p>
         </div>
@@ -165,7 +161,7 @@ export function AgendamentosManager() {
             render={<Link href="/transferir" />}
             nativeButton={false}
             variant="outline"
-            className="h-10 bg-transparent text-slate-200"
+            className="h-10  text-foreground"
           >
             <Send className="size-4" /> Fluxo de transferência
           </Button>
@@ -175,7 +171,7 @@ export function AgendamentosManager() {
               setAviso(null)
               setDialog({ tipo: "criar" })
             }}
-            className="h-10 bg-gradient-to-r from-teal-400 to-emerald-500 px-4 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+            className="h-10 bg-primary px-4 text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="size-4" /> Agendar novo PIX
           </Button>
@@ -185,7 +181,7 @@ export function AgendamentosManager() {
       {aviso && (
         <p
           role="status"
-          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
         >
           <CheckCircle2 className="size-4 shrink-0" /> {aviso}
         </p>
@@ -193,50 +189,50 @@ export function AgendamentosManager() {
 
       {/* Cards de resumo dos PIX Agendados */}
       <section aria-label="Resumo de agendamentos" className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <CalendarClock className="size-3.5 text-amber-300" /> Agendamentos pendentes
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <CalendarClock className="size-3.5 text-amber-700 dark:text-amber-400" /> Agendamentos pendentes
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-white">
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
             {resumo.qtdPendentes} {resumo.qtdPendentes === 1 ? "agendamento" : "agendamentos"}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             Aguardando a data programada para envio
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Wallet className="size-3.5 text-teal-300" /> Total programado (pendentes)
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Wallet className="size-3.5 text-primary" /> Total programado (pendentes)
           </p>
-          <p id="total-agendado" className="mt-1 text-2xl font-semibold tracking-tight text-amber-300">
+          <p id="total-agendado" className="mt-1 text-2xl font-semibold tracking-tight text-amber-700 dark:text-amber-400">
             {formatBRL(resumo.totalPendente)}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             {contaSelecionadaObj
               ? `Saldo atual da conta: ${formatBRL(contaSelecionadaObj.saldo)}`
               : "Soma das transferências pendentes"}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Calendar className="size-3.5 text-emerald-300" /> Próximo envio
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Calendar className="size-3.5 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400" /> Próximo envio
           </p>
           {resumo.proximo ? (
             <>
-              <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-300">
+              <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
                 {formatData(resumo.proximo.agendadaPara ?? resumo.proximo.dataHora.slice(0, 10))}
               </p>
-              <p className="mt-1 truncate text-xs text-slate-400">
+              <p className="mt-1 truncate text-xs text-muted-foreground">
                 {formatBRL(resumo.proximo.valor)} para{" "}
                 {resumo.proximo.destinatarioNome ?? `Conta ${resumo.proximo.contaDestino}`}
               </p>
             </>
           ) : (
             <>
-              <p className="mt-1 text-lg font-medium text-slate-300">Nenhum pendente</p>
-              <p className="mt-1 text-xs text-slate-400">Você não possui envios futuros na fila.</p>
+              <p className="mt-1 text-lg font-medium text-muted-foreground">Nenhum pendente</p>
+              <p className="mt-1 text-xs text-muted-foreground">Você não possui envios futuros na fila.</p>
             </>
           )}
         </div>
@@ -245,9 +241,9 @@ export function AgendamentosManager() {
       {saldoInsuficienteParaAgendados && (
         <p
           role="alert"
-          className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200"
+          className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-300"
         >
-          <TriangleAlert className="mt-0.5 size-4 shrink-0 text-amber-300" />
+          <TriangleAlert className="mt-0.5 size-4 shrink-0 text-amber-700 dark:text-amber-400" />
           <span>
             O total agendado na conta <strong>{contaSelecionadaObj.numeroConta}</strong> (
             {formatBRL(resumo.totalPendente)}) é maior que o saldo disponível atual (
@@ -259,17 +255,17 @@ export function AgendamentosManager() {
       {/* Filtros de Conta e Status */}
       <section
         aria-label="Filtros de agendamentos"
-        className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl sm:px-6"
+        className="flex flex-wrap items-center justify-between gap-4 rounded-xl border bg-card p-4 text-card-foreground shadow-xs sm:px-6"
       >
         <div className="flex flex-wrap items-center gap-3">
-          <Label htmlFor="agendamento-conta-select" className="text-sm text-slate-300">
+          <Label htmlFor="agendamento-conta-select" className="text-sm text-muted-foreground">
             Conta de origem
           </Label>
           <select
             id="agendamento-conta-select"
             value={contaFiltro}
             onChange={(e) => setContaFiltro(e.target.value)}
-            className="h-10 rounded-lg border border-white/15 bg-slate-900 px-3 text-sm text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="h-10 rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <option value="TODAS">Todas as minhas contas ({contas.length})</option>
             {contas.map((c) => (
@@ -284,7 +280,7 @@ export function AgendamentosManager() {
         <div
           role="group"
           aria-label="Filtrar por status do agendamento"
-          className="inline-flex rounded-xl border border-white/15 bg-slate-900/90 p-1"
+          className="inline-flex rounded-xl border border-border bg-muted p-1"
         >
           {(
             [
@@ -300,8 +296,8 @@ export function AgendamentosManager() {
               onClick={() => setStatusFiltro(op.id)}
               className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                 statusFiltro === op.id
-                  ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
-                  : "text-slate-300 hover:text-white"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {op.label}
@@ -312,16 +308,16 @@ export function AgendamentosManager() {
 
       {/* Lista de Agendamentos (Funcionalidades 31 e 13) */}
       {agendamentosFiltrados.length === 0 ? (
-        <section className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-white/20 bg-white/[0.04] px-6 py-16 text-center backdrop-blur-xl">
-          <CalendarClock className="size-10 text-slate-400" />
+        <section className="flex flex-col items-center gap-3 rounded-xl border border-dashed bg-muted/30 px-6 py-16 text-center ">
+          <CalendarClock className="size-10 text-muted-foreground" />
           <h2 className="text-lg font-semibold">Nenhum PIX agendado encontrado</h2>
-          <p className="max-w-sm text-sm text-slate-300">
+          <p className="max-w-sm text-sm text-muted-foreground">
             Programe pagamentos recorrentes ou transferências para datas futuras com facilidade.
           </p>
           <Button
             variant="outline"
             onClick={() => setDialog({ tipo: "criar" })}
-            className="mt-1 bg-transparent text-slate-100"
+            className="mt-1  text-foreground"
           >
             <Plus className="size-4" /> Criar agendamento
           </Button>
@@ -342,8 +338,8 @@ export function AgendamentosManager() {
                 key={t.id}
                 className={`flex flex-col gap-4 rounded-2xl border p-5 backdrop-blur-xl transition-colors sm:flex-row sm:items-center sm:justify-between sm:px-6 ${
                   pendente
-                    ? "border-white/10 bg-white/[0.06] hover:border-teal-300/30"
-                    : "border-white/10 bg-white/[0.03] opacity-80"
+                    ? "border-border bg-muted/40 hover:border-teal-300/30"
+                    : "border-border bg-muted/40 opacity-80"
                 }`}
               >
                 <div className="flex items-start gap-4">
@@ -351,7 +347,7 @@ export function AgendamentosManager() {
                     className={`flex size-12 shrink-0 items-center justify-center rounded-2xl ${
                       pendente
                         ? "bg-gradient-to-br from-amber-300 to-orange-400 text-slate-950 shadow-lg shadow-amber-500/15"
-                        : "bg-slate-800 text-slate-400"
+                        : "bg-slate-800 text-muted-foreground"
                     }`}
                   >
                     {pendente ? <CalendarClock className="size-6" /> : <XCircle className="size-6" />}
@@ -359,8 +355,8 @@ export function AgendamentosManager() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-base font-semibold text-white">{nomeDestino}</span>
-                      <span className="font-mono text-xs text-slate-400">#{t.id}</span>
+                      <span className="text-base font-semibold text-foreground">{nomeDestino}</span>
+                      <span className="font-mono text-xs text-muted-foreground">#{t.id}</span>
                       <span
                         className={`rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${status.className}`}
                       >
@@ -368,8 +364,8 @@ export function AgendamentosManager() {
                       </span>
                     </div>
 
-                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-300">
-                      <span className="inline-flex items-center gap-1 font-medium text-amber-200">
+                    <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                      <span className="inline-flex items-center gap-1 font-medium text-amber-800 dark:text-amber-300">
                         <Clock className="size-3.5" /> Programado para {formatData(dataProgramada)}
                       </span>
                       <span>·</span>
@@ -380,26 +376,26 @@ export function AgendamentosManager() {
                     </div>
 
                     {t.chaveDestino && t.tipoChave && (
-                      <p className="mt-1 text-xs text-slate-400">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         Chave {tipoInfo[t.tipoChave as TipoChave]?.label ?? t.tipoChave}:{" "}
-                        <span className="font-mono text-slate-300">
+                        <span className="font-mono text-muted-foreground">
                           {formatChave(t.tipoChave, t.chaveDestino)}
                         </span>
                       </p>
                     )}
 
                     {t.descricao && (
-                      <p className="mt-1 text-xs italic text-slate-300">“{t.descricao}”</p>
+                      <p className="mt-1 text-xs italic text-muted-foreground">“{t.descricao}”</p>
                     )}
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-border pt-3 sm:flex-col sm:items-end sm:border-t-0 sm:pt-0">
                   <div className="text-left sm:text-right">
-                    <p className="text-xs text-slate-400">Valor agendado</p>
+                    <p className="text-xs text-muted-foreground">Valor agendado</p>
                     <p
                       className={`text-xl font-bold tracking-tight ${
-                        pendente ? "text-teal-300" : "text-slate-400 line-through"
+                        pendente ? "text-primary" : "text-muted-foreground line-through"
                       }`}
                     >
                       {formatBRL(t.valor)}
@@ -412,7 +408,7 @@ export function AgendamentosManager() {
                       nativeButton={false}
                       variant="ghost"
                       size="sm"
-                      className="text-xs text-slate-300 hover:text-white"
+                      className="text-xs text-muted-foreground hover:text-foreground"
                     >
                       <ExternalLink className="size-3.5" /> Detalhes
                     </Button>
@@ -427,7 +423,7 @@ export function AgendamentosManager() {
                             setAviso(null)
                             setDialog({ tipo: "editar", transacao: t })
                           }}
-                          className="bg-transparent text-xs text-slate-100"
+                          className=" text-xs text-foreground"
                         >
                           <Pencil className="size-3.5" /> Editar
                         </Button>
@@ -603,7 +599,7 @@ function AgendamentoForm({
     inicial ? inicial.valor.toFixed(2).replace(".", ",") : ""
   )
   const [dataProgramada, setDataProgramada] = useState(
-    inicial?.agendadaPara ?? amanhaISO()
+    inicial?.agendadaPara ?? DATA_MINIMA_AGENDAMENTO
   )
   const [descricao, setDescricao] = useState(inicial?.descricao ?? "")
   const [erro, setErro] = useState<string | null>(null)
@@ -757,7 +753,7 @@ function AgendamentoForm({
           <Input
             id="form-data-programada"
             type="date"
-            min={amanhaISO()}
+            min={DATA_MINIMA_AGENDAMENTO}
             value={dataProgramada}
             onChange={(e) => {
               setDataProgramada(e.target.value)

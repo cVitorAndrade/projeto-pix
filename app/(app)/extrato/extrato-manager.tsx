@@ -23,14 +23,14 @@ import {
 import { formatBRL, formatData, formatDataHora } from "@/lib/format"
 import type { Conta, StatusTransacao, Transacao } from "@/lib/types"
 
-const cardClass = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl sm:p-8"
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
+const cardClass = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8"
+const inputClass = ""
 
 const statusEstilo: Record<StatusTransacao, { label: string; className: string }> = {
-  PENDENTE: { label: "Pendente", className: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
-  CONCLUIDA: { label: "Concluída", className: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30" },
-  CANCELADA: { label: "Cancelada", className: "bg-slate-500/30 text-slate-300 border-slate-500/40" },
-  ESTORNADA: { label: "Estornada", className: "bg-indigo-500/25 text-indigo-300 border-indigo-500/30" },
+  PENDENTE: { label: "Pendente", className: "bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30" },
+  CONCLUIDA: { label: "Concluída", className: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400 border-emerald-500/30" },
+  CANCELADA: { label: "Cancelada", className: "bg-slate-500/30 text-muted-foreground border-slate-500/40" },
+  ESTORNADA: { label: "Estornada", className: "bg-indigo-500/25 text-indigo-700 dark:text-indigo-400 border-indigo-500/30" },
 }
 
 type FiltroDirecao = "TODAS" | "ENTRADAS" | "SAIDAS"
@@ -153,7 +153,7 @@ export function ExtratoManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Extrato e Histórico</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Consulte todas as transações PIX registradas no histórico e filtre por data.
           </p>
         </div>
@@ -161,7 +161,7 @@ export function ExtratoManager() {
         <Button
           render={<Link href="/transferir" />}
           nativeButton={false}
-          className="h-10 bg-gradient-to-r from-teal-400 to-emerald-500 px-4 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+          className="h-10 bg-primary px-4 text-primary-foreground hover:bg-primary/90"
         >
           <Send className="size-4" /> Nova transferência
         </Button>
@@ -171,14 +171,14 @@ export function ExtratoManager() {
       <section aria-label="Filtros do extrato" className={`${cardClass} flex flex-col gap-5`}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="extrato-conta-select" className="text-slate-200">
+            <Label htmlFor="extrato-conta-select" className="text-foreground">
               Conta bancária
             </Label>
             <select
               id="extrato-conta-select"
               value={contaSelecionada}
               onChange={(e) => setContaSelecionada(e.target.value)}
-              className="h-10 w-full rounded-lg border border-white/15 bg-slate-900 px-3 text-sm text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {contas.map((c) => (
                 <option key={c.numeroConta} value={c.numeroConta}>
@@ -190,8 +190,8 @@ export function ExtratoManager() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="filtro-data" className="flex items-center gap-1.5 text-slate-200">
-              <Calendar className="size-3.5 text-teal-300" /> Filtrar por data
+            <Label htmlFor="filtro-data" className="flex items-center gap-1.5 text-foreground">
+              <Calendar className="size-3.5 text-primary" /> Filtrar por data
             </Label>
             <div className="flex gap-2">
               <Input
@@ -208,7 +208,7 @@ export function ExtratoManager() {
                   variant="outline"
                   onClick={() => setDataFiltro("")}
                   title="Limpar filtro de data"
-                  className="h-10 shrink-0 bg-transparent px-3 text-slate-200"
+                  className="h-10 shrink-0  px-3 text-foreground"
                 >
                   <X className="size-4" /> Limpar
                 </Button>
@@ -217,11 +217,11 @@ export function ExtratoManager() {
           </div>
 
           <div className="flex flex-col gap-2 sm:col-span-2 lg:col-span-1">
-            <span className="text-sm font-medium text-slate-200">Movimentação</span>
+            <span className="text-sm font-medium text-foreground">Movimentação</span>
             <div
               role="group"
               aria-label="Filtrar por tipo de movimentação"
-              className="grid h-10 grid-cols-3 rounded-lg border border-white/15 bg-slate-900/90 p-1"
+              className="grid h-10 grid-cols-3 rounded-lg border border-border bg-muted p-1"
             >
               {(
                 [
@@ -237,8 +237,8 @@ export function ExtratoManager() {
                   onClick={() => setDirecao(op.id)}
                   className={`rounded-md text-xs font-medium transition-colors ${
                     direcao === op.id
-                      ? "bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
-                      : "text-slate-300 hover:text-white"
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   {op.label}
@@ -249,15 +249,15 @@ export function ExtratoManager() {
         </div>
 
         {/* Atalhos rápidos de data para facilitar testes da Funcionalidade 16 */}
-        <div className="flex flex-wrap items-center gap-2 border-t border-white/10 pt-4">
-          <span className="text-xs text-slate-400">Datas com lançamentos:</span>
+        <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4">
+          <span className="text-xs text-muted-foreground">Datas com lançamentos:</span>
           <button
             type="button"
             onClick={() => setDataFiltro("")}
             className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
               dataFiltro === ""
-                ? "border-teal-400/60 bg-teal-400/20 text-teal-200"
-                : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                ? "border-primary bg-primary/10 text-foreground"
+                : "border-border bg-muted/50 text-muted-foreground hover:bg-muted"
             }`}
           >
             Todas as datas ({transacoes.length})
@@ -269,8 +269,8 @@ export function ExtratoManager() {
               onClick={() => setDataFiltro(d)}
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 dataFiltro === d
-                  ? "border-teal-400/60 bg-teal-400/20 text-teal-200"
-                  : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                  ? "border-primary bg-primary/10 text-foreground"
+                  : "border-border bg-muted/50 text-muted-foreground hover:bg-muted"
               }`}
             >
               {formatData(d)}
@@ -281,38 +281,38 @@ export function ExtratoManager() {
 
       {/* Cards de resumo do período/filtro selecionado */}
       <section aria-label="Resumo do extrato" className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="text-xs text-slate-400">
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="text-xs text-muted-foreground">
             {contaAtivaObj ? `Saldo atual · Conta ${contaAtivaObj.numeroConta}` : "Transações listadas"}
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-white">
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
             {contaAtivaObj ? formatBRL(contaAtivaObj.saldo) : `${resumo.quantidade} registros`}
           </p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-muted-foreground">
             {resumo.quantidade}{" "}
             {resumo.quantidade === 1 ? "transação encontrada" : "transações encontradas"}
             {dataFiltro ? ` em ${formatData(dataFiltro)}` : " no histórico"}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <ArrowDownLeft className="size-3.5 text-emerald-400" /> Entradas concluídas
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ArrowDownLeft className="size-3.5 text-emerald-600 dark:text-emerald-400" /> Entradas concluídas
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-300">
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
             + {formatBRL(resumo.entradas)}
           </p>
-          <p className="mt-1 text-xs text-slate-400">Valores recebidos via PIX</p>
+          <p className="mt-1 text-xs text-muted-foreground">Valores recebidos via PIX</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur-xl">
-          <p className="flex items-center gap-1.5 text-xs text-slate-400">
-            <ArrowUpRight className="size-3.5 text-rose-400" /> Saídas concluídas
+        <div className="rounded-xl border bg-card p-5 text-card-foreground shadow-xs">
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <ArrowUpRight className="size-3.5 text-rose-600 dark:text-rose-400" /> Saídas concluídas
           </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-rose-300">
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-rose-600 dark:text-rose-600 dark:text-rose-400">
             − {formatBRL(resumo.saidas)}
           </p>
-          <p className="mt-1 text-xs text-slate-400">Valores enviados via PIX</p>
+          <p className="mt-1 text-xs text-muted-foreground">Valores enviados via PIX</p>
         </div>
       </section>
 
@@ -320,21 +320,21 @@ export function ExtratoManager() {
       <section aria-labelledby="lista-historico-titulo" className={cardClass}>
         <div className="mb-5 flex flex-wrap items-center justify-between gap-2">
           <h2 id="lista-historico-titulo" className="flex items-center gap-2 text-lg font-semibold">
-            <ReceiptText className="size-5 text-teal-300" />
+            <ReceiptText className="size-5 text-primary" />
             {dataFiltro ? `Lançamentos de ${formatData(dataFiltro)}` : "Todas as transações"}
           </h2>
           {dataFiltro && (
-            <span className="rounded-full border border-teal-400/30 bg-teal-400/10 px-3 py-1 text-xs font-medium text-teal-200">
+            <span className="rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-foreground">
               Filtro ativo: {formatData(dataFiltro)}
             </span>
           )}
         </div>
 
         {gruposPorData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-white/15 py-16 text-center">
-            <FileSearch className="size-10 text-slate-400" />
+          <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-muted/30 py-16 text-center">
+            <FileSearch className="size-10 text-muted-foreground" />
             <h3 className="text-base font-semibold">Nenhuma transação encontrada</h3>
-            <p className="max-w-sm text-sm text-slate-300">
+            <p className="max-w-sm text-sm text-muted-foreground">
               {dataFiltro
                 ? `Não há transações registradas na data ${formatData(dataFiltro)} para este filtro.`
                 : "Nenhuma movimentação PIX corresponde aos filtros selecionados."}
@@ -347,7 +347,7 @@ export function ExtratoManager() {
                   setDataFiltro("")
                   setDirecao("TODAS")
                 }}
-                className="mt-1 bg-transparent text-slate-100"
+                className="mt-1  text-foreground"
               >
                 Limpar filtros
               </Button>
@@ -357,16 +357,16 @@ export function ExtratoManager() {
           <div className="flex flex-col gap-6">
             {gruposPorData.map((grupo) => (
               <div key={grupo.data} className="flex flex-col gap-2">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <div className="flex items-center justify-between border-b border-border pb-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {formatData(grupo.data)}
                   </span>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-muted-foreground">
                     {grupo.itens.length} {grupo.itens.length === 1 ? "transação" : "transações"}
                   </span>
                 </div>
 
-                <ul className="divide-y divide-white/10">
+                <ul className="divide-y divide-border">
                   {grupo.itens.map((t) => {
                     const mov = classificarMovimento(t)
                     const enviada = mov === "SAIDA"
@@ -380,7 +380,7 @@ export function ExtratoManager() {
                     return (
                       <li
                         key={t.id}
-                        className="flex flex-wrap items-center justify-between gap-4 py-3.5 transition-colors hover:bg-white/[0.02]"
+                        className="flex flex-wrap items-center justify-between gap-4 py-3.5 transition-colors hover:bg-muted/40"
                       >
                         <div className="flex min-w-0 flex-1 items-center gap-3.5">
                           <span
@@ -388,8 +388,8 @@ export function ExtratoManager() {
                               entreContas
                                 ? "bg-sky-500/15 text-sky-300"
                                 : enviada
-                                  ? "bg-rose-500/15 text-rose-300"
-                                  : "bg-emerald-500/15 text-emerald-300"
+                                  ? "bg-rose-500/15 text-rose-600 dark:text-rose-600 dark:text-rose-400"
+                                  : "bg-emerald-500/15 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
                             }`}
                           >
                             {entreContas ? (
@@ -403,14 +403,14 @@ export function ExtratoManager() {
 
                           <div className="min-w-0 flex-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <p className="truncate text-sm font-medium text-white">
+                              <p className="truncate text-sm font-medium text-foreground">
                                 {entreContas
                                   ? "Transferência entre suas contas"
                                   : enviada
                                     ? "PIX enviado"
                                     : "PIX recebido"}
                               </p>
-                              <span className="font-mono text-xs text-slate-400">#{t.id}</span>
+                              <span className="font-mono text-xs text-muted-foreground">#{t.id}</span>
                               <span
                                 className={`rounded-full border px-2 py-0.5 text-[11px] font-medium ${status.className}`}
                               >
@@ -418,7 +418,7 @@ export function ExtratoManager() {
                               </span>
                             </div>
 
-                            <p className="mt-0.5 truncate text-xs text-slate-300">
+                            <p className="mt-0.5 truncate text-xs text-muted-foreground">
                               {entreContas ? (
                                 <>
                                   Conta {t.contaOrigem} → Conta {t.contaDestino}
@@ -435,7 +435,7 @@ export function ExtratoManager() {
                             </p>
 
                             {t.descricao && (
-                              <p className="mt-0.5 truncate text-xs italic text-slate-400">
+                              <p className="mt-0.5 truncate text-xs italic text-muted-foreground">
                                 “{t.descricao}”
                               </p>
                             )}
@@ -449,15 +449,15 @@ export function ExtratoManager() {
                                 entreContas
                                   ? "text-sky-300"
                                   : enviada
-                                    ? "text-rose-300"
-                                    : "text-emerald-300"
+                                    ? "text-rose-600 dark:text-rose-600 dark:text-rose-400"
+                                    : "text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
                               }`}
                             >
                               {entreContas ? "" : enviada ? "− " : "+ "}
                               {formatBRL(t.valor)}
                             </p>
                             {contaSelecionada === "TODAS" && !entreContas && (
-                              <p className="text-[11px] text-slate-400">
+                              <p className="text-[11px] text-muted-foreground">
                                 Conta {enviada ? t.contaOrigem : t.contaDestino}
                               </p>
                             )}
@@ -468,7 +468,7 @@ export function ExtratoManager() {
                             nativeButton={false}
                             variant="outline"
                             size="sm"
-                            className="bg-transparent text-xs text-slate-200"
+                            className=" text-xs text-foreground"
                           >
                             Detalhes
                           </Button>

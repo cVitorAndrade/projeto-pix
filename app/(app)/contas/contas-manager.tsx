@@ -65,15 +65,11 @@ export function ContasManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Minhas contas</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Gerencie suas contas bancárias, acompanhe o saldo e o status de cada uma.
           </p>
         </div>
-        <Button
-          id="conta-nova"
-          onClick={() => setDialog({ tipo: "criar" })}
-          className="h-10 bg-gradient-to-r from-teal-400 to-emerald-500 px-4 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
-        >
+        <Button id="conta-nova" size="lg" onClick={() => setDialog({ tipo: "criar" })}>
           <Plus className="size-4" /> Nova conta
         </Button>
       </div>
@@ -81,17 +77,17 @@ export function ContasManager() {
       {aviso && (
         <p
           role="status"
-          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-400"
         >
           <CheckCircle2 className="size-4 shrink-0" /> {aviso}
         </p>
       )}
 
       {contas.length === 0 ? (
-        <section className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-white/20 bg-white/[0.04] px-6 py-16 text-center backdrop-blur-xl">
-          <Landmark className="size-10 text-slate-400" />
+        <section className="flex flex-col items-center gap-3 rounded-xl border border-dashed bg-muted/30 px-6 py-16 text-center">
+          <Landmark className="size-10 text-muted-foreground" />
           <h2 className="text-lg font-semibold">Você ainda não tem contas</h2>
-          <p className="max-w-sm text-sm text-slate-300">
+          <p className="max-w-sm text-sm text-muted-foreground">
             Crie sua primeira conta para receber e enviar valores via PIX.
           </p>
           <Button variant="outline" onClick={() => setDialog({ tipo: "criar" })}>
@@ -191,54 +187,54 @@ function ContaCard({
   return (
     <article
       aria-label={`Conta ${conta.numeroConta}`}
-      className={`flex h-full flex-col gap-5 rounded-2xl border p-6 backdrop-blur-xl transition-colors ${
+      className={`flex h-full flex-col gap-5 rounded-xl border p-6 text-card-foreground shadow-xs transition-colors ${
         conta.bloqueada
-          ? "border-red-500/30 bg-red-500/[0.06]"
-          : "border-white/10 bg-white/[0.06] hover:border-teal-300/30"
+          ? "border-destructive/30 bg-destructive/5"
+          : "bg-card hover:border-foreground/20"
       }`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <span className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-300 to-emerald-500 text-slate-950">
+          <span className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Landmark className="size-5" />
           </span>
           <div>
-            <p className="text-xs text-slate-400">Conta</p>
+            <p className="text-xs text-muted-foreground">Conta</p>
             <h2 className="text-lg font-semibold tracking-tight">{conta.numeroConta}</h2>
           </div>
         </div>
         {conta.bloqueada ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/20 px-2.5 py-1 text-xs font-medium text-red-300">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-medium text-destructive">
             <Lock className="size-3" /> Bloqueada
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-300">
-            <span className="size-1.5 rounded-full bg-emerald-400" /> Ativa
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+            <span className="size-1.5 rounded-full bg-emerald-500" /> Ativa
           </span>
         )}
       </div>
 
       <div>
-        <p className="text-xs text-slate-400">Saldo disponível</p>
+        <p className="text-xs text-muted-foreground">Saldo disponível</p>
         <p className="mt-1 text-3xl font-semibold tracking-tight">{formatBRL(conta.saldo)}</p>
-        <p className="mt-2 flex items-center gap-1.5 text-xs text-slate-400">
+        <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
           <KeyRound className="size-3.5" />
           {chaves === 0 ? "Nenhuma chave PIX" : `${chaves} chave${chaves > 1 ? "s" : ""} PIX`}
         </p>
       </div>
 
       {conta.bloqueada && (
-        <p className="flex items-start gap-2 text-xs text-red-300">
+        <p className="flex items-start gap-2 text-xs text-destructive">
           <ShieldAlert className="mt-0.5 size-4 shrink-0" />
           Transações e depósitos estão indisponíveis enquanto a conta estiver bloqueada.
         </p>
       )}
 
-      <div className="mt-auto flex flex-wrap gap-2 border-t border-white/10 pt-4">
-        <Button variant="outline" size="sm" onClick={onEditar} className="bg-transparent text-slate-100">
+      <div className="mt-auto flex flex-wrap gap-2 border-t pt-4">
+        <Button variant="outline" size="sm" onClick={onEditar}>
           <Pencil /> Editar
         </Button>
-        <Button variant="outline" size="sm" onClick={onBloqueio} className="bg-transparent text-slate-100">
+        <Button variant="outline" size="sm" onClick={onBloqueio}>
           {conta.bloqueada ? <LockOpen /> : <Lock />}
           {conta.bloqueada ? "Desbloquear" : "Bloquear"}
         </Button>

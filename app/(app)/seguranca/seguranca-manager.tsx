@@ -44,8 +44,8 @@ import type { Conta } from "@/lib/types"
 
 const delay = (ms = 700) => new Promise((r) => setTimeout(r, ms))
 
-const cardClass = "rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur-xl sm:p-8"
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
+const cardClass = "rounded-xl border bg-card p-6 text-card-foreground shadow-xs sm:p-8"
+const inputClass = ""
 
 const VALORES_LIMITE_RAPIDO = [500, 1000, 2000, 5000]
 
@@ -354,21 +354,21 @@ export function SegurancaManager() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Segurança e Limites</h1>
-          <p className="mt-1 text-sm text-slate-300">
+          <p className="mt-1 text-sm text-muted-foreground">
             Configure seu limite diário de transferências PIX, bloqueie sua conta em caso de suspeita de fraude e audite os logins e atividades.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-2.5 backdrop-blur-xl">
-          <Wallet className="size-4 text-teal-300" />
-          <Label htmlFor="seguranca-conta-select" className="text-xs text-slate-300">
+        <div className="flex items-center gap-3 rounded-2xl border border-border bg-muted/40 px-4 py-2.5 backdrop-blur-xl">
+          <Wallet className="size-4 text-primary" />
+          <Label htmlFor="seguranca-conta-select" className="text-xs text-muted-foreground">
             Conta:
           </Label>
           <select
             id="seguranca-conta-select"
             value={conta.numeroConta}
             onChange={(e) => trocarConta(e.target.value)}
-            className="h-8 rounded-lg border border-white/15 bg-slate-900 px-2.5 text-xs font-medium text-white outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="h-8 rounded-lg border border-input bg-background px-2.5 text-xs font-medium text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             {contas.map((c) => (
               <option key={c.numeroConta} value={c.numeroConta}>
@@ -382,7 +382,7 @@ export function SegurancaManager() {
       {avisoGeral && (
         <p
           role="status"
-          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300"
+          className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
         >
           <CheckCircle2 className="size-4 shrink-0" /> {avisoGeral}
         </p>
@@ -394,27 +394,27 @@ export function SegurancaManager() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 id="limites-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                <SlidersHorizontal className="size-5 text-teal-300" /> Limite Diário de Transações (22)
+                <SlidersHorizontal className="size-5 text-primary" /> Limite Diário de Transações (22)
               </h2>
-              <p className="mt-0.5 text-xs text-slate-300">
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 Defina o valor máximo diário e por operação PIX para a conta{" "}
                 <strong>{conta.numeroConta}</strong>.
               </p>
             </div>
-            <span className="rounded-full border border-teal-400/30 bg-teal-400/10 px-2.5 py-0.5 text-xs font-medium text-teal-200">
+            <span className="rounded-full border border-border bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground">
               Conta {conta.numeroConta}
             </span>
           </div>
 
           {/* Barra de uso do limite diário hoje */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4">
+          <div className="rounded-xl border border-border bg-muted/40 p-4">
             <div className="flex flex-wrap items-baseline justify-between gap-2 text-xs">
-              <span className="text-slate-300">
+              <span className="text-muted-foreground">
                 Utilizado hoje:{" "}
-                <strong className="text-white">{formatBRL(utilizadoHoje)}</strong> de{" "}
-                <strong className="text-teal-300">{formatBRL(limiteAtual.diario)}</strong>
+                <strong className="text-foreground">{formatBRL(utilizadoHoje)}</strong> de{" "}
+                <strong className="text-primary">{formatBRL(limiteAtual.diario)}</strong>
               </span>
-              <span className="font-medium text-emerald-300">
+              <span className="font-medium text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
                 Disponível: {formatBRL(disponivelHoje)}
               </span>
             </div>
@@ -437,16 +437,16 @@ export function SegurancaManager() {
               />
             </div>
 
-            <p className="mt-2 text-[11px] text-slate-400">
+            <p className="mt-2 text-[11px] text-muted-foreground">
               Teto atual por PIX individual:{" "}
-              <strong className="text-slate-200">{formatBRL(limiteAtual.porTransacao)}</strong>
+              <strong className="text-foreground">{formatBRL(limiteAtual.porTransacao)}</strong>
             </p>
           </div>
 
           <form onSubmit={handleSalvarLimite} noValidate className="flex flex-col gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="limite-diario-input" className="text-slate-200">
+                <Label htmlFor="limite-diario-input" className="text-foreground">
                   Limite diário total (R$)
                 </Label>
                 <Input
@@ -464,7 +464,7 @@ export function SegurancaManager() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="limite-transacao-input" className="text-slate-200">
+                <Label htmlFor="limite-transacao-input" className="text-foreground">
                   Limite por transação PIX (R$)
                 </Label>
                 <Input
@@ -483,7 +483,7 @@ export function SegurancaManager() {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-400">Valores sugeridos:</span>
+              <span className="text-xs text-muted-foreground">Valores sugeridos:</span>
               {VALORES_LIMITE_RAPIDO.map((v) => (
                 <button
                   key={v}
@@ -497,7 +497,7 @@ export function SegurancaManager() {
                     )
                     setErroLimite(null)
                   }}
-                  className="rounded-lg border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-slate-200 transition-colors hover:border-teal-300/40 hover:bg-white/10 disabled:opacity-50"
+                  className="rounded-lg border border-input bg-muted/50 px-2.5 py-1 text-xs text-foreground transition-colors hover:border-teal-300/40 hover:bg-muted disabled:opacity-50"
                 >
                   {formatBRL(v)}
                 </button>
@@ -507,7 +507,7 @@ export function SegurancaManager() {
             {erroLimite && (
               <p
                 role="alert"
-                className="flex items-center gap-1.5 text-xs text-red-400"
+                className="flex items-center gap-1.5 text-xs text-destructive"
               >
                 <TriangleAlert className="size-3.5 shrink-0" /> {erroLimite}
               </p>
@@ -517,7 +517,7 @@ export function SegurancaManager() {
               id="salvar-limite-btn"
               type="submit"
               disabled={salvandoLimite || conta.bloqueada}
-              className="mt-auto h-11 bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 hover:from-teal-300 hover:to-emerald-400"
+              className="mt-auto h-11 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {salvandoLimite ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -534,9 +534,9 @@ export function SegurancaManager() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h2 id="bloqueio-fraude-titulo" className="flex items-center gap-2 text-lg font-semibold">
-                  <ShieldAlert className="size-5 text-rose-400" /> Bloqueio por Suspeita de Fraude (21)
+                  <ShieldAlert className="size-5 text-rose-600 dark:text-rose-400" /> Bloqueio por Suspeita de Fraude (21)
                 </h2>
-                <p className="mt-0.5 text-xs text-slate-300">
+                <p className="mt-0.5 text-xs text-muted-foreground">
                   Bloqueie preventivamente qualquer uma de suas contas caso identifique atividade suspeita, perda do celular ou tentativa de golpe.
                 </p>
               </div>
@@ -548,34 +548,34 @@ export function SegurancaManager() {
                   key={c.numeroConta}
                   className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4 transition-colors ${
                     c.bloqueada
-                      ? "border-red-500/35 bg-red-500/10"
-                      : "border-white/10 bg-white/[0.04]"
+                      ? "border-destructive/30 bg-destructive/10"
+                      : "border-border bg-muted/40"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <span
                       className={`flex size-10 shrink-0 items-center justify-center rounded-xl ${
                         c.bloqueada
-                          ? "bg-red-500/20 text-red-300"
-                          : "bg-emerald-500/20 text-emerald-300"
+                          ? "bg-destructive/10 text-destructive"
+                          : "bg-emerald-500/20 text-emerald-700 dark:text-emerald-600 dark:text-emerald-400"
                       }`}
                     >
                       {c.bloqueada ? <Lock className="size-5" /> : <ShieldCheck className="size-5" />}
                     </span>
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-white">Conta {c.numeroConta}</span>
+                        <span className="font-semibold text-foreground">Conta {c.numeroConta}</span>
                         {c.bloqueada ? (
-                          <span className="rounded-full bg-red-500/25 px-2 py-0.5 text-[10px] font-semibold text-red-200">
+                          <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[10px] font-semibold text-red-200">
                             Bloqueada por segurança
                           </span>
                         ) : (
-                          <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
+                          <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-600 dark:text-emerald-400">
                             Protegida · Ativa
                           </span>
                         )}
                       </div>
-                      <p className="mt-0.5 text-xs text-slate-300">
+                      <p className="mt-0.5 text-xs text-muted-foreground">
                         Saldo: {formatBRL(c.saldo)} · {c.chavesPix.length}{" "}
                         {c.chavesPix.length === 1 ? "chave PIX" : "chaves PIX"}
                       </p>
@@ -591,7 +591,7 @@ export function SegurancaManager() {
                       setMotivoBloqueio(MOTIVOS_FRAUDE[0])
                       setDialogBloqueio(c)
                     }}
-                    className={c.bloqueada ? "bg-transparent text-slate-100" : undefined}
+                    className={c.bloqueada ? " text-foreground" : undefined}
                   >
                     {c.bloqueada ? (
                       <>
@@ -608,20 +608,20 @@ export function SegurancaManager() {
             </ul>
           </div>
 
-          <p className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-xs text-slate-300">
-            Enquanto uma conta estiver bloqueada (<code className="font-mono text-teal-300">POST /contas/&#123;numero&#125;/bloqueio</code>), todas as transferências de entrada, saída e alterações de chaves ficam temporariamente suspensas.
+          <p className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+            Enquanto uma conta estiver bloqueada (<code className="font-mono text-primary">POST /contas/&#123;numero&#125;/bloqueio</code>), todas as transferências de entrada, saída e alterações de chaves ficam temporariamente suspensas.
           </p>
         </section>
       </div>
 
       {/* Funcionalidade 28: Consulta de Histórico de Logins e Atividades */}
       <section aria-labelledby="historico-atividades-titulo" className={cardClass}>
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
           <div>
             <h2 id="historico-atividades-titulo" className="flex items-center gap-2 text-lg font-semibold">
-              <Activity className="size-5 text-teal-300" /> Histórico de Logins e Atividades (28)
+              <Activity className="size-5 text-primary" /> Histórico de Logins e Atividades (28)
             </h2>
-            <p className="mt-0.5 text-xs text-slate-300">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               Auditoria de acessos, dispositivos conectados, alterações de limites, bloqueios e transações realizadas.
             </p>
           </div>
@@ -646,8 +646,8 @@ export function SegurancaManager() {
                 onClick={() => setFiltroAtividade(f.id)}
                 className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   filtroAtividade === f.id
-                    ? "border-teal-400/60 bg-teal-400/20 text-teal-200"
-                    : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                    ? "border-primary bg-primary/10 text-foreground"
+                    : "border-border bg-muted/50 text-muted-foreground hover:bg-muted"
                 }`}
               >
                 {f.label}
@@ -656,7 +656,7 @@ export function SegurancaManager() {
           </div>
         </div>
 
-        <ul className="divide-y divide-white/10">
+        <ul className="divide-y divide-border">
           {atividadesFiltradas.map((a) => {
             const ehMobile = a.dispositivo.toLowerCase().includes("android")
             return (
@@ -668,10 +668,10 @@ export function SegurancaManager() {
                   <span
                     className={`mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl ${
                       a.nivel === "critico"
-                        ? "bg-red-500/20 text-red-300"
+                        ? "bg-destructive/10 text-destructive"
                         : a.nivel === "aviso"
-                          ? "bg-amber-500/20 text-amber-300"
-                          : "bg-teal-400/15 text-teal-300"
+                          ? "bg-amber-500/20 text-amber-700 dark:text-amber-400"
+                          : "bg-muted text-primary"
                     }`}
                   >
                     {a.categoria === "LOGIN" ? (
@@ -685,36 +685,36 @@ export function SegurancaManager() {
 
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-semibold text-white">{a.titulo}</span>
-                      <span className="rounded bg-white/10 px-2 py-0.5 font-mono text-[10px] text-teal-300">
+                      <span className="text-sm font-semibold text-foreground">{a.titulo}</span>
+                      <span className="rounded bg-muted px-2 py-0.5 font-mono text-[10px] text-primary">
                         {a.evento}
                       </span>
                       {a.nivel === "critico" && (
-                        <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-semibold text-red-300">
+                        <span className="rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-semibold text-destructive">
                           Crítico
                         </span>
                       )}
                       {a.nivel === "aviso" && (
-                        <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold text-amber-300">
+                        <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
                           Atenção
                         </span>
                       )}
                     </div>
 
-                    <p className="mt-1 text-xs text-slate-300">{a.detalhe}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">{a.detalhe}</p>
 
-                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
+                    <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
                         {ehMobile ? (
-                          <Smartphone className="size-3.5 text-slate-400" />
+                          <Smartphone className="size-3.5 text-muted-foreground" />
                         ) : (
-                          <Laptop className="size-3.5 text-slate-400" />
+                          <Laptop className="size-3.5 text-muted-foreground" />
                         )}
                         {a.dispositivo}
                       </span>
                       <span>·</span>
                       <span className="inline-flex items-center gap-1">
-                        <MapPin className="size-3.5 text-teal-300" /> {a.localizacao}
+                        <MapPin className="size-3.5 text-primary" /> {a.localizacao}
                       </span>
                       <span>·</span>
                       <span className="font-mono">IP {a.ip}</span>
@@ -724,7 +724,7 @@ export function SegurancaManager() {
                   </div>
                 </div>
 
-                <div className="shrink-0 text-left text-xs text-slate-400 sm:text-right">
+                <div className="shrink-0 text-left text-xs text-muted-foreground sm:text-right">
                   {formatDataHora(a.dataHora)}
                 </div>
               </li>

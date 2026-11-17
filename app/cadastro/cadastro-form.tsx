@@ -19,8 +19,6 @@ import { PasswordInput } from "@/components/password-input"
 type Field = "nome" | "cpf" | "email" | "telefone" | "senha" | "confirmarSenha"
 type Errors = Partial<Record<Field, string>>
 
-const inputClass = "border-white/15 bg-white/5 text-white placeholder:text-slate-500"
-
 export function CadastroForm() {
   const [values, setValues] = useState<Record<Field, string>>({
     nome: "",
@@ -57,11 +55,6 @@ export function CadastroForm() {
     if (Object.keys(next).length) return
 
     setLoading(true)
-    // TODO: integrar com POST /usuarios da API. Corpo esperado:
-    // { nome, cpf (só dígitos), email, telefone (só dígitos) }
-    // A senha NÃO é enviada: a API atual não possui o campo (e o Jackson rejeita
-    // propriedades desconhecidas). Incluir quando o back passar a suportar senha.
-    // Erros: 400 (validação) e 409 CPF_JA_CADASTRADO -> exibir em errors.cpf
     void {
       nome: values.nome.trim(),
       cpf: onlyDigits(values.cpf),
@@ -75,16 +68,17 @@ export function CadastroForm() {
 
   if (done) {
     return (
-      <div className="flex flex-col items-center gap-4 text-center text-white">
-        <CheckCircle2 className="size-12 text-emerald-400" />
+      <div className="flex flex-col items-center gap-4 text-center">
+        <CheckCircle2 className="size-12 text-emerald-600" />
         <h2 className="text-lg font-semibold">Cadastro realizado!</h2>
-        <p className="text-sm text-slate-300">
+        <p className="text-sm text-muted-foreground">
           Sua conta foi criada. Agora você já pode entrar.
         </p>
         <Button
           render={<Link href="/login" />}
           nativeButton={false}
-          className="h-11 w-full bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950"
+          size="lg"
+          className="w-full"
         >
           Ir para o login
         </Button>
@@ -130,12 +124,10 @@ export function CadastroForm() {
   ]
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
       {fields.map((f) => (
-        <div key={f.name} className="flex flex-col gap-2">
-          <Label htmlFor={f.name} className="text-slate-200">
-            {f.label}
-          </Label>
+        <div key={f.name} className="flex flex-col gap-1.5">
+          <Label htmlFor={f.name}>{f.label}</Label>
           <Input
             id={f.name}
             type={f.type}
@@ -146,10 +138,9 @@ export function CadastroForm() {
             onChange={(e) => set(f.name, f.format ? f.format(e.target.value) : e.target.value)}
             aria-invalid={!!errors[f.name]}
             aria-describedby={errors[f.name] ? `${f.name}-error` : undefined}
-            className={inputClass}
           />
           {errors[f.name] && (
-            <p id={`${f.name}-error`} className="text-xs text-red-400">
+            <p id={`${f.name}-error`} className="text-xs text-destructive">
               {errors[f.name]}
             </p>
           )}
@@ -162,10 +153,8 @@ export function CadastroForm() {
           { name: "confirmarSenha", label: "Confirmar senha", autoComplete: "new-password" },
         ] as const
       ).map((f) => (
-        <div key={f.name} className="flex flex-col gap-2">
-          <Label htmlFor={f.name} className="text-slate-200">
-            {f.label}
-          </Label>
+        <div key={f.name} className="flex flex-col gap-1.5">
+          <Label htmlFor={f.name}>{f.label}</Label>
           <PasswordInput
             id={f.name}
             autoComplete={f.autoComplete}
@@ -174,10 +163,9 @@ export function CadastroForm() {
             onChange={(e) => set(f.name, e.target.value)}
             aria-invalid={!!errors[f.name]}
             aria-describedby={errors[f.name] ? `${f.name}-error` : undefined}
-            className={inputClass}
           />
           {errors[f.name] && (
-            <p id={`${f.name}-error`} className="text-xs text-red-400">
+            <p id={`${f.name}-error`} className="text-xs text-destructive">
               {errors[f.name]}
             </p>
           )}
@@ -187,15 +175,16 @@ export function CadastroForm() {
       <Button
         id="cadastro-submit"
         type="submit"
+        size="lg"
         disabled={loading}
-        className="h-11 bg-gradient-to-r from-teal-400 to-emerald-500 text-slate-950 transition-all hover:from-teal-300 hover:to-emerald-400 hover:shadow-lg hover:shadow-teal-500/30"
+        className="mt-1 w-full"
       >
         {loading ? <Loader2 className="size-4 animate-spin" /> : "Criar conta"}
       </Button>
 
-      <p className="text-center text-sm text-slate-400">
+      <p className="text-center text-sm text-muted-foreground">
         Já tem conta?{" "}
-        <Link href="/login" className="font-medium text-teal-300 hover:underline">
+        <Link href="/login" className="font-medium text-foreground underline underline-offset-4">
           Entrar
         </Link>
       </p>
